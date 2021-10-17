@@ -9,6 +9,8 @@ import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
 import state from "../state";
+import ticksPerSecond from "../constants/ticksPerSecond";
+import update from "./update";
 
 const run = (): void => {
     console.log("running Foddian");
@@ -31,6 +33,9 @@ const run = (): void => {
     sizeScreen();
     listenToDOM();
     state.player = new Player;
+    setInterval((): void => {
+        update();
+    }, 1000 / ticksPerSecond);
     state.app.ticker.add(render);
     focusScreen();
 };
