@@ -1,0 +1,12 @@
+{
+    "beautify.options": {
+        "newline-between-rules": false,
+        "selector-separator-newline": false
+    },
+    "powermode.customExplosions": [
+        "https://i.imgur.com/yt5PnVg.gif"
+    ],
+    "powermode.enabled": true,
+    "powermode.presets": "flames",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
+}

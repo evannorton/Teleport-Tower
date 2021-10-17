@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["lib/functions/run.js", "lib/index.js"],
+  "sourcesContent": ["\"use strict\";\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst run = () => {\r\n    console.log(\"running Foddian\");\r\n};\r\nexports.default = run;\r\n", "\"use strict\";\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst run_1 = __importDefault(require(\"./functions/run\"));\r\ndocument.onreadystatechange = () => {\r\n    if (document.readyState === \"complete\") {\r\n        run_1.default();\r\n    }\r\n};\r\n"],
+  "mappings": ";;;;;;AAAA;AAAA;AAAA;AACA,aAAO,eAAe,SAAS,cAAc,EAAE,OAAO;AACtD,UAAM,MAAM,MAAM;AACd,gBAAQ,IAAI;AAAA;AAEhB,cAAQ,UAAU;AAAA;AAAA;;;ACLlB;AAAA;AAAA;AACA,UAAI,kBAAmB,WAAQ,QAAK,mBAAoB,SAAU,KAAK;AACnE,eAAQ,OAAO,IAAI,aAAc,MAAM,EAAE,WAAW;AAAA;AAExD,aAAO,eAAe,SAAS,cAAc,EAAE,OAAO;AACtD,UAAM,QAAQ,gBAAgB;AAC9B,eAAS,qBAAqB,MAAM;AAChC,YAAI,SAAS,eAAe,YAAY;AACpC,gBAAM;AAAA;AAAA;AAAA;AAAA;",
+  "names": []
+}

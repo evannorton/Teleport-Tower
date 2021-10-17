@@ -1,0 +1,35 @@
+{
+  "name": "foddian",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run createLib && tsc --p ./tsconfig.json && esbuild ./lib/index.js --bundle --minify --keep-names --outfile=./script.js",
+    "clearConsole": "node -e \"console.clear();\"",
+    "clearGitCache": "git rm -r --cached . && git add -A",
+    "createLib": "node ./scripts/createLib",
+    "dev": "nodemon --delay 1 --watch ./audio/ --watch ./css/ --watch ./fonts/ --watch ./images/ --watch ./src/ --watch ./favicon.png --watch ./index.html --watch ./tiled/ --watch ./.env -e css,fnt,js,json,mp3,png,ts,ttf --exec \"npm run clearConsole && npm run createLib && tsc --preserveWatchOutput --p ./tsconfig.json && esbuild ./lib/index.js --bundle --sourcemap --outfile=./script.js || exit 1\"",
+    "fixPNG": "node ./scripts/fixPNG",
+    "lint": "eslint . --cache --ext .ts",
+    "lintAndFix": "eslint . --cache --fix --ext .ts",
+    "start": "node ./server/lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/retro-mmo-com/foddian.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/retro-mmo-com/foddian/issues"
+  },
+  "homepage": "https://github.com/retro-mmo-com/foddian#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "esbuild": "^0.13.8",
+    "eslint": "^8.0.1",
+    "nodemon": "^2.0.13",
+    "typescript": "^4.4.4"
+  }
+}
