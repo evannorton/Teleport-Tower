@@ -1,6 +1,7 @@
 import { Application, SCALE_MODES, settings, utils } from "pixi.js";
 import define from "./define/define";
 import listenToDOM from "./listenToDOM";
+import render from "./render";
 import screen from "../elements/screen";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
@@ -27,6 +28,7 @@ const run = (): void => {
     }
     sizeScreen();
     listenToDOM();
+    state.app.ticker.add(render);
 };
 
 export default run;

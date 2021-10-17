@@ -5,8 +5,8 @@ class Player extends Definable {
     private readonly height: number = 32;
     private readonly map: string = "main";
     private readonly width: number = 32;
-    private readonly x: number = 4;
-    private readonly y: number = 30;
+    private readonly x: number = 128;
+    private readonly y: number = 960;
     public constructor() {
         super(nanoid());
     }
