@@ -1,7 +1,7 @@
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import TiledTileset from "../interfaces/tiled/TiledTileset";
-import TiledTilesetTileProperty from "../interfaces/tiled/TiledTilesetTileProperty";
+import tileWidth from "../constants/tileWidth";
 import tilesets from "../maps/tilesets";
 
 class Tileset extends Definable {
@@ -17,31 +17,29 @@ class Tileset extends Definable {
         }
     }
 
-    public hasCollisionAtIndex(index: number): boolean {
-        if (this.tiledTileset) {
-            const properties: TiledTilesetTileProperty[] | undefined = this.tiledTileset.tiles[index].properties;
-            if (typeof properties !== "undefined") {
-                const property: TiledTilesetTileProperty | undefined = properties.find((tileProperty: TiledTilesetTileProperty): boolean => tileProperty.name === "collision");
-                if (typeof property !== "undefined") {
-                    if (typeof property.value === "boolean") {
-                        return property.value;
-                    }
-                }
-            }
-        }
-        return false;
+    public getImage(): ImageSource {
+        return this.image;
     }
 
-    private getXAtIndex(index: number): number | null {
-        if (this.tiledTileset !== null) {
-            return index % (this.tiledTileset.imagewidth / 16);
+    public getTileX(tileID: number): number | null {
+        const width: number | null = this.getWidth();
+        if (width !== null) {
+            return tileID % width;
         }
         return null;
     }
 
-    private getYAtIndex(index: number): number | null {
+    public getTileY(tileID: number): number | null {
+        const width: number | null = this.getWidth();
+        if (width !== null) {
+            return Math.floor(tileID / width);
+        }
+        return null;
+    }
+
+    private getWidth(): number | null {
         if (this.tiledTileset !== null) {
-            return Math.floor(index / (this.tiledTileset.imagewidth / 16));
+            return this.tiledTileset.imagewidth / tileWidth;
         }
         return null;
     }
