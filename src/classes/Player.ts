@@ -16,7 +16,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly map: string = "main";
     private readonly width: number = 32;
     private x: number = 80;
-    private readonly y: number = 460;
+    private y: number = 260;
     public constructor() {
         super(nanoid());
     }
@@ -58,8 +58,13 @@ class Player extends Definable implements Renderable, Updatable {
                 break;
             case "d":
             case "arrowright":
-                this.x++;
+                if (this.hasCollisionOnRight() === false) {
+                    this.x++;
+                }
                 break;
+        }
+        if (this.hasCollisionOnBottom() === false) {
+            this.y++;
         }
     }
 
@@ -78,11 +83,33 @@ class Player extends Definable implements Renderable, Updatable {
         return coordinates.some((coordinate: Coordinate): boolean => this.hasCollisionAtCoordinate(coordinate));
     }
 
+    private hasCollisionOnBottom(): boolean {
+        const coordinates: Coordinate[] = [];
+        for (let i: number = 0; i < this.width; i++) {
+            coordinates.push({
+                x: this.x + i,
+                y: this.y + this.height
+            });
+        }
+        return this.hasCollisionInCoordinates(coordinates);
+    }
+
     private hasCollisionOnLeft(): boolean {
         const coordinates: Coordinate[] = [];
         for (let i: number = 0; i < this.height; i++) {
             coordinates.push({
                 x: this.x - 1,
+                y: this.y + i
+            });
+        }
+        return this.hasCollisionInCoordinates(coordinates);
+    }
+
+    private hasCollisionOnRight(): boolean {
+        const coordinates: Coordinate[] = [];
+        for (let i: number = 0; i < this.height; i++) {
+            coordinates.push({
+                x: this.x + this.width,
                 y: this.y + i
             });
         }
