@@ -85,7 +85,7 @@ class Player extends Definable implements Renderable, Updatable {
 
     private hasCollisionOnBottom(): boolean {
         const coordinates: Coordinate[] = [];
-        for (let i: number = 0; i < this.width; i++) {
+        for (let i: number = 1; i < this.width; i++) {
             coordinates.push({
                 x: this.x + i,
                 y: this.y + this.height
@@ -98,7 +98,7 @@ class Player extends Definable implements Renderable, Updatable {
         const coordinates: Coordinate[] = [];
         for (let i: number = 0; i < this.height; i++) {
             coordinates.push({
-                x: this.x - 1,
+                x: this.x,
                 y: this.y + i
             });
         }
