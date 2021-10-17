@@ -1,6 +1,7 @@
 import { Application, SCALE_MODES, settings, utils } from "pixi.js";
 import Player from "../classes/Player";
 import define from "./define/define";
+import focusScreen from "./focusScreen";
 import listenToDOM from "./listenToDOM";
 import render from "./render";
 import screen from "../elements/screen";
@@ -31,6 +32,7 @@ const run = (): void => {
     listenToDOM();
     state.player = new Player;
     state.app.ticker.add(render);
+    focusScreen();
 };
 
 export default run;
