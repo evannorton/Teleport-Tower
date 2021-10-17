@@ -1,6 +1,8 @@
+import Coordinate from "../interfaces/Coordinate";
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
+import Tilemap from "./Tilemap";
 import Updatable from "../interfaces/Updatable";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
@@ -14,7 +16,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly map: string = "main";
     private readonly width: number = 32;
     private x: number = 80;
-    private readonly y: number = 464;
+    private readonly y: number = 460;
     public constructor() {
         super(nanoid());
     }
@@ -50,13 +52,41 @@ class Player extends Definable implements Renderable, Updatable {
         switch (movementKey) {
             case "a":
             case "arrowleft":
-                this.x--;
+                if (this.hasCollisionOnLeft() === false) {
+                    this.x--;
+                }
                 break;
             case "d":
             case "arrowright":
                 this.x++;
                 break;
         }
+    }
+
+    private hasCollisionAtCoordinate(coordinate: Coordinate): boolean {
+        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
+        if (typeof tilemaps !== "undefined") {
+            const tilemap: Definable | undefined = tilemaps.get(this.map);
+            if (tilemap instanceof Tilemap) {
+                return tilemap.hasCollisionAtCoordinate(coordinate);
+            }
+        }
+        return false;
+    }
+
+    private hasCollisionInCoordinates(coordinates: Coordinate[]): boolean {
+        return coordinates.some((coordinate: Coordinate): boolean => this.hasCollisionAtCoordinate(coordinate));
+    }
+
+    private hasCollisionOnLeft(): boolean {
+        const coordinates: Coordinate[] = [];
+        for (let i: number = 0; i < this.height; i++) {
+            coordinates.push({
+                x: this.x - 1,
+                y: this.y + i
+            });
+        }
+        return this.hasCollisionInCoordinates(coordinates);
     }
 }
 

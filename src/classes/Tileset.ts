@@ -1,6 +1,7 @@
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import TiledTileset from "../interfaces/tiled/TiledTileset";
+import TiledTilesetTileProperty from "../interfaces/tiled/TiledTilesetTileProperty";
 import tileWidth from "../constants/tileWidth";
 import tilesets from "../maps/tilesets";
 
@@ -35,6 +36,19 @@ class Tileset extends Definable {
             return Math.floor(tileID / width);
         }
         return null;
+    }
+
+    public hasCollisionAtTile(tileID: number): boolean {
+        if (this.tiledTileset !== null) {
+            const properties: TiledTilesetTileProperty[] | undefined = this.tiledTileset.tiles[tileID].properties;
+            if (typeof properties !== "undefined") {
+                const matched: TiledTilesetTileProperty | undefined = properties.find((property: TiledTilesetTileProperty): boolean => property.name === "collision");
+                if (typeof matched !== "undefined" && matched.value === true) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private getWidth(): number | null {
