@@ -1,3 +1,3 @@
-const screenHeight: number = 360;
+const screenHeight: number = 352;
 
 export default screenHeight;
