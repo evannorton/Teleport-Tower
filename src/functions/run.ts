@@ -1,4 +1,5 @@
 import { Application, SCALE_MODES, settings, utils } from "pixi.js";
+import Player from "../classes/Player";
 import define from "./define/define";
 import listenToDOM from "./listenToDOM";
 import render from "./render";
@@ -28,6 +29,7 @@ const run = (): void => {
     }
     sizeScreen();
     listenToDOM();
+    state.player = new Player;
     state.app.ticker.add(render);
 };
 

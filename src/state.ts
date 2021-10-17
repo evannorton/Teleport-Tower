@@ -3,10 +3,10 @@ import Player from "./classes/Player";
 
 const state: {
     app: Application | null;
-    player: Player;
+    player: Player | null;
 } = {
     app: null,
-    player: new Player
+    player: null
 };
 
 export default state;
