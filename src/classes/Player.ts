@@ -4,19 +4,25 @@ import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
 import Updatable from "../interfaces/Updatable";
+import baseFallVelocity from "../constants/baseFallVelocity";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
+import fallAcceleration from "../constants/fallAcceleration";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
+import getSumOfNumbers from "../functions/getSumOfNumbers";
+import maxFallVelocity from "../constants/maxFallVelocity";
 import { nanoid } from "nanoid";
 import state from "../state";
 
 class Player extends Definable implements Renderable, Updatable {
+    private acceleratedAt: number | null = null;
+    private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
     private readonly map: string = "main";
     private readonly width: number = 32;
-    private x: number = 80;
-    private y: number = 260;
+    private x: number = 0;
+    private y: number = -32;
     public constructor() {
         super(nanoid());
     }
@@ -63,8 +69,38 @@ class Player extends Definable implements Renderable, Updatable {
                 }
                 break;
         }
-        if (this.hasCollisionOnBottom() === false) {
-            this.y++;
+        if (this.hasCollisionOnBottom()) {
+            this.fallVelocity = baseFallVelocity;
+        }
+        else {
+            this.y += this.getFallableHeight();
+            if (this.acceleratedAt === null || state.now > this.acceleratedAt + 500) {
+                this.acceleratedAt = state.now;
+                if (this.fallVelocity < maxFallVelocity) {
+                    this.fallVelocity = Math.min(this.fallVelocity + fallAcceleration, maxFallVelocity);
+                }
+                else {
+                    this.fallVelocity = maxFallVelocity;
+                }
+            }
+        }
+    }
+
+    private getFallableHeight(): number {
+        const pixels: number[] = [];
+        for (let y: number = 0; true; y++) {
+            if (y === this.fallVelocity) {
+                return this.fallVelocity;
+            }
+            for (let x: number = 1; x < this.width; x++) {
+                if (this.hasCollisionAtCoordinate({
+                    x: this.x + x,
+                    y: this.y + this.height + y
+                })) {
+                    return getSumOfNumbers(pixels);
+                }
+            }
+            pixels.push(1);
         }
     }
 

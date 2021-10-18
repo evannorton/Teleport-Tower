@@ -240,7 +240,10 @@
             }
         ],
         "@typescript-eslint/no-unnecessary-condition": [
-            "error"
+            "error",
+            {
+                "allowConstantLoopConditions": true
+            }
         ],
         "@typescript-eslint/no-unnecessary-qualifier": [
             "error"
@@ -599,7 +602,7 @@
         "no-constant-condition": [
             "error",
             {
-                "checkLoops": true
+                "checkLoops": false
             }
         ],
         "no-continue": [
