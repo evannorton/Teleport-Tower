@@ -11,7 +11,6 @@ import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
-import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import state from "../state";
 
@@ -19,6 +18,8 @@ class Player extends Definable implements Renderable, Updatable {
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
     private readonly map: string = "main";
+    private movementDirection: "left" | "right" | null = null;
+    private movementVelocity: number = 0;
     private readonly width: number = 32;
     private x: number = 0;
     private y: number = -32;
@@ -54,16 +55,34 @@ class Player extends Definable implements Renderable, Updatable {
 
     public update(): void {
         const sinceUpdate: number = state.now - state.updatedAt;
-        const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-        switch (movementKey) {
-            case "a":
-            case "arrowleft":
+        if (this.hasCollisionOnBottom()) {
+            if (state.heldKeys.length === 0) {
+                this.movementDirection = null;
+                this.movementVelocity = 0;
+            }
+            else {
+                const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
+                switch (movementKey) {
+                    case "a":
+                    case "arrowleft":
+                        this.movementDirection = "left";
+                        this.movementVelocity = 32;
+                        break;
+                    case "d":
+                    case "arrowright":
+                        this.movementDirection = "right";
+                        this.movementVelocity = 32;
+                        break;
+                }
+            }
+        }
+        switch (this.movementDirection) {
+            case "left":
                 if (this.hasCollisionOnLeft() === false) {
                     this.x -= this.getLeftMovableWidth();
                 }
                 break;
-            case "d":
-            case "arrowright":
+            case "right":
                 if (this.hasCollisionOnRight() === false) {
                     this.x += this.getRightMovableWidth();
                 }
@@ -101,8 +120,8 @@ class Player extends Definable implements Renderable, Updatable {
         const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * movementVelocity / 1000) {
-                return sinceUpdate * movementVelocity / 1000;
+            if (x >= sinceUpdate * this.movementVelocity / 1000) {
+                return sinceUpdate * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y), 0, this.height - 1)) {
                 return getSumOfNumbers(pixels);
@@ -115,8 +134,8 @@ class Player extends Definable implements Renderable, Updatable {
         const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * movementVelocity / 1000) {
-                return sinceUpdate * movementVelocity / 1000;
+            if (x >= sinceUpdate * this.movementVelocity / 1000) {
+                return sinceUpdate * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y), 0, this.height - 1)) {
                 return getSumOfNumbers(pixels);
