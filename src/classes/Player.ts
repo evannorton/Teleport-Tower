@@ -121,8 +121,8 @@ class Player extends Definable implements Renderable, Updatable {
         const coordinates: Coordinate[] = [];
         for (let i: number = 1; i < this.width; i++) {
             coordinates.push({
-                x: this.x + i,
-                y: this.y + this.height
+                x: Math.round(this.x + i),
+                y: Math.round(this.y + this.height)
             });
         }
         return this.hasCollisionInCoordinates(coordinates);
@@ -132,8 +132,8 @@ class Player extends Definable implements Renderable, Updatable {
         const coordinates: Coordinate[] = [];
         for (let i: number = 0; i < this.height; i++) {
             coordinates.push({
-                x: this.x,
-                y: this.y + i
+                x: Math.round(this.x),
+                y: Math.round(this.y + i)
             });
         }
         return this.hasCollisionInCoordinates(coordinates);
@@ -143,8 +143,8 @@ class Player extends Definable implements Renderable, Updatable {
         const coordinates: Coordinate[] = [];
         for (let i: number = 0; i < this.height; i++) {
             coordinates.push({
-                x: this.x + this.width,
-                y: this.y + i
+                x: Math.round(this.x + this.width),
+                y: Math.round(this.y + i)
             });
         }
         return this.hasCollisionInCoordinates(coordinates);
