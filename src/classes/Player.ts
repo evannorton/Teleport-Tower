@@ -60,13 +60,13 @@ class Player extends Definable implements Renderable, Updatable {
             case "a":
             case "arrowleft":
                 if (this.hasCollisionOnLeft() === false) {
-                    this.x -= sinceUpdate * movementVelocity / 1000;
+                    this.x -= this.getLeftMovableWidth();
                 }
                 break;
             case "d":
             case "arrowright":
                 if (this.hasCollisionOnRight() === false) {
-                    this.x += sinceUpdate * movementVelocity / 1000;
+                    this.x += this.getRightMovableWidth();
                 }
                 break;
         }
@@ -95,6 +95,44 @@ class Player extends Definable implements Renderable, Updatable {
                 if (this.hasCollisionAtCoordinate({
                     x: Math.round(this.x + x),
                     y: Math.round(this.y + this.height + y)
+                })) {
+                    return getSumOfNumbers(pixels);
+                }
+            }
+            pixels.push(1);
+        }
+    }
+
+    private getLeftMovableWidth(): number {
+        const sinceUpdate: number = state.now - state.updatedAt;
+        const pixels: number[] = [];
+        for (let x: number = 0; true; x++) {
+            if (x >= sinceUpdate * movementVelocity / 1000) {
+                return sinceUpdate * movementVelocity / 1000;
+            }
+            for (let y: number = 0; y < this.height; y++) {
+                if (this.hasCollisionAtCoordinate({
+                    x: Math.round(this.x - x),
+                    y: Math.round(this.y + y)
+                })) {
+                    return getSumOfNumbers(pixels);
+                }
+            }
+            pixels.push(1);
+        }
+    }
+
+    private getRightMovableWidth(): number {
+        const sinceUpdate: number = state.now - state.updatedAt;
+        const pixels: number[] = [];
+        for (let x: number = 0; true; x++) {
+            if (x >= sinceUpdate * movementVelocity / 1000) {
+                return sinceUpdate * movementVelocity / 1000;
+            }
+            for (let y: number = 0; y < this.height; y++) {
+                if (this.hasCollisionAtCoordinate({
+                    x: Math.round(this.x + this.width + x),
+                    y: Math.round(this.y + y)
                 })) {
                     return getSumOfNumbers(pixels);
                 }
