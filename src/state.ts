@@ -6,13 +6,13 @@ const state: {
     heldKeys: string[];
     now: number;
     player: Player | null;
-    tickedAt: number | null;
+    updatedAt: number;
 } = {
     app: null,
     heldKeys: [],
-    now: 0,
+    now: performance.now(),
     player: null,
-    tickedAt: null
+    updatedAt: 0
 };
 
 export default state;

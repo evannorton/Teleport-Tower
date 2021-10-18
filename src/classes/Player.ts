@@ -12,6 +12,7 @@ import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
+import movementSpeed from "../constants/movementSpeed";
 import { nanoid } from "nanoid";
 import state from "../state";
 
@@ -53,18 +54,19 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public update(): void {
+        const sinceUpdate: number = state.now - state.updatedAt;
         const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
         switch (movementKey) {
             case "a":
             case "arrowleft":
                 if (this.hasCollisionOnLeft() === false) {
-                    this.x--;
+                    this.x -= sinceUpdate * movementSpeed / 1000;
                 }
                 break;
             case "d":
             case "arrowright":
                 if (this.hasCollisionOnRight() === false) {
-                    this.x++;
+                    this.x += sinceUpdate * movementSpeed / 1000;
                 }
                 break;
         }
