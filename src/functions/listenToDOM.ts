@@ -6,6 +6,9 @@ const listenToDOM = (): void => {
         sizeScreen();
     });
     if (state.app !== null) {
+        state.app.renderer.view.addEventListener("contextmenu", (e: Event): void => {
+            e.preventDefault();
+        });
         state.app.renderer.view.addEventListener("keydown", (e: KeyboardEvent): void => {
             const key: string = e.key.toLowerCase();
             switch (key) {
