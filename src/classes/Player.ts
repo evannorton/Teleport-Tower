@@ -16,7 +16,6 @@ import { nanoid } from "nanoid";
 import state from "../state";
 
 class Player extends Definable implements Renderable, Updatable {
-    private acceleratedAt: number | null = null;
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
     private readonly map: string = "main";
@@ -74,14 +73,11 @@ class Player extends Definable implements Renderable, Updatable {
         }
         else {
             this.y += this.getFallableHeight();
-            if (this.acceleratedAt === null || state.now > this.acceleratedAt + 500) {
-                this.acceleratedAt = state.now;
-                if (this.fallVelocity < maxFallVelocity) {
-                    this.fallVelocity = Math.min(this.fallVelocity + fallAcceleration, maxFallVelocity);
-                }
-                else {
-                    this.fallVelocity = maxFallVelocity;
-                }
+            if (this.fallVelocity < maxFallVelocity) {
+                this.fallVelocity = Math.min(this.fallVelocity + fallAcceleration, maxFallVelocity);
+            }
+            else {
+                this.fallVelocity = maxFallVelocity;
             }
         }
     }
