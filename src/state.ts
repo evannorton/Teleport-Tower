@@ -10,7 +10,7 @@ const state: {
 } = {
     app: null,
     heldKeys: [],
-    now: Date.now(),
+    now: 0,
     player: null,
     tickedAt: null
 };
