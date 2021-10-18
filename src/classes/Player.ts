@@ -123,7 +123,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y), 0, this.height - 1)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
             }
             pixels.push(1);
@@ -137,7 +137,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y), 0, this.height - 1)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
             }
             pixels.push(1);
@@ -160,11 +160,11 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private hasCollisionOnLeft(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x), Math.round(this.y), 0, this.height - 1);
+        return this.hasCollisionInRectangle(Math.round(this.x), Math.round(this.y + 1), 0, this.height - 2);
     }
 
     private hasCollisionOnRight(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y), 0, this.height - 1);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y + 1), 0, this.height - 2);
     }
 }
 
