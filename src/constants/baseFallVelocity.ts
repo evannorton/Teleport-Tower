@@ -1,3 +1,3 @@
-const baseFallVelocity: number = 64;
+const baseFallVelocity: number = 128;
 
 export default baseFallVelocity;

@@ -11,6 +11,7 @@ import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
+import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import state from "../state";
 
@@ -66,12 +67,12 @@ class Player extends Definable implements Renderable, Updatable {
                     case "a":
                     case "arrowleft":
                         this.movementDirection = "left";
-                        this.movementVelocity = 32;
+                        this.movementVelocity = movementVelocity;
                         break;
                     case "d":
                     case "arrowright":
                         this.movementDirection = "right";
-                        this.movementVelocity = 32;
+                        this.movementVelocity = movementVelocity;
                         break;
                 }
             }

@@ -1,3 +1,3 @@
-const movementVelocity: number = 48;
+const movementVelocity: number = 128;
 
 export default movementVelocity;
