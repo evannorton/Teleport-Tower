@@ -37,9 +37,9 @@ class Tilemap extends Definable implements Renderable {
                                     for (const chunk of innerLayer.chunks) {
                                         let key: number = 0;
                                         for (const datum of chunk.data) {
-                                            const tileID: number = datum - 1;
                                             const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
                                             if (typeof tiledTileset !== "undefined") {
+                                                const tileID: number = datum - tiledTileset.firstgid;
                                                 const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
                                                 if (typeof tilesets !== "undefined") {
                                                     const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
@@ -75,10 +75,10 @@ class Tilemap extends Definable implements Renderable {
                                 if (typeof innerLayer.chunks !== "undefined") {
                                     innerLayer.chunks.forEach((chunk: TiledTilemapLayerChunk): void => {
                                         chunk.data.forEach((datum: number, key: number): void => {
-                                            const tileID: number = datum - 1;
                                             if (this.tiledTilemap !== null) {
                                                 const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
                                                 if (typeof tiledTileset !== "undefined") {
+                                                    const tileID: number = datum - tiledTileset.firstgid;
                                                     const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
                                                     if (typeof tilesets !== "undefined") {
                                                         const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
