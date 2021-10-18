@@ -1,4 +1,3 @@
-import Coordinate from "../interfaces/Coordinate";
 import Definable from "./Definable";
 import Renderable from "../interfaces/Renderable";
 import TiledTilemap from "../interfaces/tiled/TiledTilemap";
@@ -10,7 +9,7 @@ import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
-import rectangleContainsPoint from "../functions/rectangleContainsPoint";
+import rectanglesOverlap from "../functions/rectanglesOverlap";
 import state from "../state";
 import tileHeight from "../constants/tileHeight";
 import tileWidth from "../constants/tileWidth";
@@ -27,44 +26,43 @@ class Tilemap extends Definable implements Renderable {
         }
     }
 
-    public hasCollisionAtCoordinate(coordinate: Coordinate): boolean {
-        const matches: number[] = [];
+    public hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {
         if (this.tiledTilemap !== null) {
-            this.tiledTilemap.layers.forEach((layer: TiledTilemapLayer): void => {
+            for (const layer of this.tiledTilemap.layers) {
                 switch (layer.name) {
                     case "below":
                         if (typeof layer.layers !== "undefined") {
-                            layer.layers.forEach((innerLayer: TiledTilemapLayer): void => {
+                            for (const innerLayer of layer.layers) {
                                 if (typeof innerLayer.chunks !== "undefined") {
-                                    innerLayer.chunks.forEach((chunk: TiledTilemapLayerChunk): void => {
-                                        chunk.data.forEach((datum: number, key: number): void => {
+                                    for (const chunk of innerLayer.chunks) {
+                                        let key: number = 0;
+                                        for (const datum of chunk.data) {
                                             const tileID: number = datum - 1;
-                                            if (this.tiledTilemap !== null) {
-                                                const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
-                                                if (typeof tiledTileset !== "undefined") {
-                                                    const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
-                                                    if (typeof tilesets !== "undefined") {
-                                                        const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
-                                                        if (tileset instanceof Tileset) {
-                                                            const x: number = (chunk.x + key % chunk.width) * tileWidth;
-                                                            const y: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
-                                                            if (tileset.hasCollisionAtTile(tileID) && rectangleContainsPoint(x, y, tileWidth, tileHeight, coordinate.x, coordinate.y)) {
-                                                                matches.push(tileID);
-                                                            }
+                                            const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
+                                            if (typeof tiledTileset !== "undefined") {
+                                                const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
+                                                if (typeof tilesets !== "undefined") {
+                                                    const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
+                                                    if (tileset instanceof Tileset) {
+                                                        const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
+                                                        const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                        if (tileset.hasCollisionAtTile(tileID) && rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
+                                                            return true;
                                                         }
                                                     }
                                                 }
                                             }
-                                        });
-                                    });
+                                            key++;
+                                        }
+                                    }
                                 }
-                            });
+                            }
                         }
                         break;
                 }
-            });
+            }
         }
-        return matches.length > 0;
+        return false;
     }
 
     public render(): void {

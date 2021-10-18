@@ -1,4 +1,3 @@
-import Coordinate from "../interfaces/Coordinate";
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
@@ -91,13 +90,8 @@ class Player extends Definable implements Renderable, Updatable {
             if (y >= sinceUpdate * this.fallVelocity / 1000) {
                 return sinceUpdate * this.fallVelocity / 1000;
             }
-            for (let x: number = 1; x < this.width; x++) {
-                if (this.hasCollisionAtCoordinate({
-                    x: Math.round(this.x + x),
-                    y: Math.round(this.y + this.height + y)
-                })) {
-                    return getSumOfNumbers(pixels);
-                }
+            if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y + this.height + y), this.width - 2, 0)) {
+                return getSumOfNumbers(pixels);
             }
             pixels.push(1);
         }
@@ -110,13 +104,8 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * movementVelocity / 1000) {
                 return sinceUpdate * movementVelocity / 1000;
             }
-            for (let y: number = 0; y < this.height; y++) {
-                if (this.hasCollisionAtCoordinate({
-                    x: Math.round(this.x - x),
-                    y: Math.round(this.y + y)
-                })) {
-                    return getSumOfNumbers(pixels);
-                }
+            if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y), 0, this.height - 1)) {
+                return getSumOfNumbers(pixels);
             }
             pixels.push(1);
         }
@@ -129,64 +118,34 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * movementVelocity / 1000) {
                 return sinceUpdate * movementVelocity / 1000;
             }
-            for (let y: number = 0; y < this.height; y++) {
-                if (this.hasCollisionAtCoordinate({
-                    x: Math.round(this.x + this.width + x),
-                    y: Math.round(this.y + y)
-                })) {
-                    return getSumOfNumbers(pixels);
-                }
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y), 0, this.height - 1)) {
+                return getSumOfNumbers(pixels);
             }
             pixels.push(1);
         }
     }
 
-    private hasCollisionAtCoordinate(coordinate: Coordinate): boolean {
+    private hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {
         const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
         if (typeof tilemaps !== "undefined") {
             const tilemap: Definable | undefined = tilemaps.get(this.map);
             if (tilemap instanceof Tilemap) {
-                return tilemap.hasCollisionAtCoordinate(coordinate);
+                return tilemap.hasCollisionInRectangle(x, y, width, height);
             }
         }
         return false;
     }
 
-    private hasCollisionInCoordinates(coordinates: Coordinate[]): boolean {
-        return coordinates.some((coordinate: Coordinate): boolean => this.hasCollisionAtCoordinate(coordinate));
-    }
-
     private hasCollisionOnBottom(): boolean {
-        const coordinates: Coordinate[] = [];
-        for (let i: number = 1; i < this.width; i++) {
-            coordinates.push({
-                x: Math.round(this.x + i),
-                y: Math.round(this.y + this.height)
-            });
-        }
-        return this.hasCollisionInCoordinates(coordinates);
+        return this.hasCollisionInRectangle(Math.round(this.x) + 1, Math.round(this.y + this.height), this.width - 2, 0);
     }
 
     private hasCollisionOnLeft(): boolean {
-        const coordinates: Coordinate[] = [];
-        for (let i: number = 0; i < this.height; i++) {
-            coordinates.push({
-                x: Math.round(this.x),
-                y: Math.round(this.y + i)
-            });
-        }
-        return this.hasCollisionInCoordinates(coordinates);
+        return this.hasCollisionInRectangle(Math.round(this.x), Math.round(this.y), 0, this.height - 1);
     }
 
     private hasCollisionOnRight(): boolean {
-        const coordinates: Coordinate[] = [];
-        for (let i: number = 0; i < this.height; i++) {
-            coordinates.push({
-                x: Math.round(this.x + this.width),
-                y: Math.round(this.y + i)
-            });
-        }
-        return this.hasCollisionInCoordinates(coordinates);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y), 0, this.height - 1);
     }
 }
 
