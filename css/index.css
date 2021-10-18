@@ -1,0 +1,31 @@
+:focus {
+    outline: none;
+}
+
+body {
+    align-items: center;
+    background-color: #000000;
+    color: #ffffff;
+    display: flex;
+    font-family: RetroPixels;
+    height: 100vh;
+    justify-content: center;
+    position: fixed;
+    width: 100vw;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+#main {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#screen {
+    cursor: url(../images/cursor.png), default;
+}
