@@ -80,12 +80,12 @@ class Player extends Definable implements Renderable, Updatable {
         switch (this.movementDirection) {
             case "left":
                 if (this.hasCollisionOnLeft() === false) {
-                    this.x -= this.getLeftMovableWidth();
+                    this.x -= this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                 }
                 break;
             case "right":
                 if (this.hasCollisionOnRight() === false) {
-                    this.x += this.getRightMovableWidth();
+                    this.x += this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                 }
                 break;
         }
