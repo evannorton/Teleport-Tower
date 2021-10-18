@@ -25,3 +25,7 @@ body {
     display: flex;
     justify-content: center;
 }
+
+#screen {
+    cursor: url(../images/cursor.png), default;
+}
