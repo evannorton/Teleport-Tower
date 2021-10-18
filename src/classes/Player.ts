@@ -12,7 +12,7 @@ import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
-import movementSpeed from "../constants/movementSpeed";
+import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import state from "../state";
 
@@ -60,13 +60,13 @@ class Player extends Definable implements Renderable, Updatable {
             case "a":
             case "arrowleft":
                 if (this.hasCollisionOnLeft() === false) {
-                    this.x -= sinceUpdate * movementSpeed / 1000;
+                    this.x -= sinceUpdate * movementVelocity / 1000;
                 }
                 break;
             case "d":
             case "arrowright":
                 if (this.hasCollisionOnRight() === false) {
-                    this.x += sinceUpdate * movementSpeed / 1000;
+                    this.x += sinceUpdate * movementVelocity / 1000;
                 }
                 break;
         }
@@ -76,7 +76,7 @@ class Player extends Definable implements Renderable, Updatable {
         else {
             this.y += this.getFallableHeight();
             if (this.fallVelocity < maxFallVelocity) {
-                this.fallVelocity = Math.min(this.fallVelocity + fallAcceleration, maxFallVelocity);
+                this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
             }
             else {
                 this.fallVelocity = maxFallVelocity;
@@ -85,15 +85,16 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getFallableHeight(): number {
+        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
-            if (y === this.fallVelocity) {
-                return this.fallVelocity;
+            if (y >= sinceUpdate * this.fallVelocity / 1000) {
+                return sinceUpdate * this.fallVelocity / 1000;
             }
             for (let x: number = 1; x < this.width; x++) {
                 if (this.hasCollisionAtCoordinate({
-                    x: this.x + x,
-                    y: this.y + this.height + y
+                    x: Math.round(this.x + x),
+                    y: Math.round(this.y + this.height + y)
                 })) {
                     return getSumOfNumbers(pixels);
                 }

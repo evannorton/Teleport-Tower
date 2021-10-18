@@ -1,3 +1,3 @@
-const maxFallVelocity: number = 5;
+const maxFallVelocity: number = 128;
 
 export default maxFallVelocity;

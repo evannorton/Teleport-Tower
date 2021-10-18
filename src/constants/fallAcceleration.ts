@@ -1,3 +1,3 @@
-const fallAcceleration: number = 2;
+const fallAcceleration: number = 64;
 
 export default fallAcceleration;
