@@ -163,6 +163,9 @@ class Player extends Definable implements Renderable, Updatable {
                 if (this.hasCollisionOnLeft() === false) {
                     const moved: number = this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                     if (moved > 0) {
+                        if (state.mouseHeldAt !== null) {
+                            state.mouseHeldAt = state.now;
+                        }
                         this.blink();
                         this.x -= moved;
                     }
@@ -172,6 +175,9 @@ class Player extends Definable implements Renderable, Updatable {
                 if (this.hasCollisionOnRight() === false) {
                     const moved: number = this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                     if (moved > 0) {
+                        if (state.mouseHeldAt !== null) {
+                            state.mouseHeldAt = state.now;
+                        }
                         this.blink();
                         this.x += moved;
                     }
@@ -184,6 +190,9 @@ class Player extends Definable implements Renderable, Updatable {
         else {
             const moved: number = this.getFallableHeight();
             if (moved > 0) {
+                if (state.mouseHeldAt !== null) {
+                    state.mouseHeldAt = state.now;
+                }
                 this.blink();
                 this.y += moved;
             }
