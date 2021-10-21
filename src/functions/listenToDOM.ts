@@ -36,6 +36,7 @@ const listenToDOM = (): void => {
         });
         state.app.renderer.view.addEventListener("focusout", (): void => {
             state.heldKeys = [];
+            state.mouseHeldAt = null;
         });
         state.app.renderer.view.addEventListener("selectstart", (e: Event): void => {
             e.preventDefault();
@@ -48,9 +49,9 @@ const listenToDOM = (): void => {
                 state.mouseHeldAt = state.now;
             }
         });
-        state.app.renderer.view.addEventListener("mouseup", (e: MouseEvent): void => {
+        addEventListener("mouseup", (e: MouseEvent): void => {
             e.preventDefault();
-            if (e.target instanceof HTMLCanvasElement) {
+            if (state.app !== null && state.app.renderer.view instanceof HTMLCanvasElement) {
                 if (state.player !== null) {
                     state.player.blink();
                     state.player.shoot();
