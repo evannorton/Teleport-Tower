@@ -152,15 +152,31 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getSourceX(): number {
+        // Falling
+        if (this.hasCollisionOnBottom() === false) {
+            return 0;
+        }
+        // Walking
         if (this.walkedAt !== null) {
             const totalDuration: number = walkSpeed * 5;
             const sinceWalked: number = state.now - this.walkedAt;
             return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
         }
+        // Idle
         return 0;
     }
 
     private getSourceY(): number {
+        // Falling
+        if (this.hasCollisionOnBottom() === false) {
+            switch (this.direction) {
+                case "left":
+                    return this.height * 7;
+                case "right":
+                    return this.height * 3;
+            }
+        }
+        // Walking
         if (this.walkedAt !== null) {
             switch (this.direction) {
                 case "left":
@@ -169,8 +185,12 @@ class Player extends Definable implements Renderable, Updatable {
                     return this.height;
             }
         }
-        if (this.direction === "left") {
-            return this.height * 4;
+        // Idle
+        switch (this.direction) {
+            case "left":
+                return this.height * 4;
+            case "right":
+                return 0;
         }
         return 0;
     }
