@@ -56,7 +56,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     public update(): void {
-        if (state.now - this.spawnedAt > projectileDuration) {
+        if (state.now - this.spawnedAt > projectileDuration && this.player.canTeleport()) {
             this.list.delete(this.slug);
             this.player.teleport();
         }

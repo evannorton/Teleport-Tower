@@ -39,6 +39,21 @@ class Player extends Definable implements Renderable, Updatable {
         this.blinkedAt = state.now;
     }
 
+    public canTeleport(): boolean {
+        if (this.projectile !== null) {
+            const x: number = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
+            const y: number = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
+            const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
+            if (typeof tilemaps !== "undefined") {
+                const tilemap: Definable | undefined = tilemaps.get(this.map);
+                if (tilemap instanceof Tilemap) {
+                    return tilemap.hasCollisionInRectangle(x, y, this.width, this.height) === false;
+                }
+            }
+        }
+        return false;
+    }
+
     public getHeight(): number {
         return this.height;
     }
@@ -70,7 +85,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public shoot(): void {
-        if (this.projectile === null && state.mouseX !== null && state.mouseY !== null) {
+        if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null) {
             const power: number = 128;
             const mouseRealX: number = state.mouseX + getCameraX();
             const mouseRealY: number = state.mouseY + getCameraY();
@@ -89,6 +104,8 @@ class Player extends Definable implements Renderable, Updatable {
         if (this.projectile !== null) {
             this.x = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
             this.y = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
+            this.movementVelocity = 0;
+            this.fallVelocity = baseFallVelocity;
             this.projectile = null;
         }
     }

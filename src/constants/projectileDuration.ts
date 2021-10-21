@@ -1,3 +1,3 @@
-const projectileDuration: number = 5000;
+const projectileDuration: number = 1000;
 
 export default projectileDuration;
