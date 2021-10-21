@@ -250,7 +250,7 @@ class Player extends Definable implements Renderable, Updatable {
             return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
         }
         // Aiming
-        if (state.mouseHeldAt !== null && state.mouseY !== null) {
+        if (this.projectile === null && state.mouseHeldAt !== null && state.mouseY !== null) {
             if (state.mouseY < this.y - getCameraY()) {
                 return this.width;
             }
@@ -286,7 +286,7 @@ class Player extends Definable implements Renderable, Updatable {
             }
         }
         // Aiming
-        if (state.mouseHeldAt !== null && state.mouseX !== null) {
+        if (this.projectile === null && state.mouseHeldAt !== null && state.mouseX !== null) {
             if (this.isAimingLeft()) {
                 return this.height * 6;
             }
