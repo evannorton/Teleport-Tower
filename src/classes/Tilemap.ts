@@ -26,6 +26,10 @@ class Tilemap extends Definable implements Renderable {
         }
     }
 
+    public getTiledTilemap(): TiledTilemap | null {
+        return this.tiledTilemap;
+    }
+
     public hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {
         if (this.tiledTilemap !== null) {
             for (const layer of this.tiledTilemap.layers) {
