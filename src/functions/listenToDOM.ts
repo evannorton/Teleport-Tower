@@ -53,6 +53,7 @@ const listenToDOM = (): void => {
             if (e.target instanceof HTMLCanvasElement) {
                 if (state.player !== null) {
                     state.player.blink();
+                    state.player.shoot();
                 }
                 state.mouseHeld = false;
             }

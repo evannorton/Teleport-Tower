@@ -1,5 +1,6 @@
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
+import Projectile from "./Projectile";
 import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
 import Updatable from "../interfaces/Updatable";
@@ -25,10 +26,11 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly height: number = 32;
     private readonly map: string = "main";
     private movementVelocity: number = 0;
+    private projectile: Projectile | null = null;
     private readonly width: number = 32;
     private walkedAt: number | null = null;
-    private x: number = 0;
-    private y: number = -32;
+    private x: number = 224;
+    private y: number = 656;
     public constructor() {
         super(nanoid());
     }
@@ -39,6 +41,10 @@ class Player extends Definable implements Renderable, Updatable {
 
     public getHeight(): number {
         return this.height;
+    }
+
+    public getMap(): string {
+        return this.map;
     }
 
     public getX(): number {
@@ -60,6 +66,30 @@ class Player extends Definable implements Renderable, Updatable {
             if (image instanceof ImageSource) {
                 drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 3);
             }
+        }
+    }
+
+    public shoot(): void {
+        if (this.projectile === null && state.mouseX !== null && state.mouseY !== null) {
+            const power: number = 128;
+            const mouseRealX: number = state.mouseX + getCameraX();
+            const mouseRealY: number = state.mouseY + getCameraY();
+            const playerRealX: number = this.x + this.width / 2;
+            const playerRealY: number = this.y + this.height / 2;
+            const diffX: number = Math.abs(mouseRealX - playerRealX);
+            const diffY: number = Math.abs(mouseRealY - playerRealY);
+            const angle: number = Math.atan2(diffY, diffX);
+            const xVector: number = Math.cos(angle);
+            const yVector: number = Math.sin(angle);
+            this.projectile = new Projectile(this, playerRealX, playerRealY, this.isAimingLeft() ? "left" : "right", this.isAimingUp() ? "up" : "down", xVector * power, yVector * power);
+        }
+    }
+
+    public teleport(): void {
+        if (this.projectile !== null) {
+            this.x = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
+            this.y = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
+            this.projectile = null;
         }
     }
 
@@ -221,7 +251,7 @@ class Player extends Definable implements Renderable, Updatable {
         }
         // Aiming
         if (state.mouseHeld && state.mouseX !== null) {
-            if (state.mouseX < this.x + this.width / 2 - getCameraX()) {
+            if (this.isAimingLeft()) {
                 return this.height * 6;
             }
             return this.height * 2;
@@ -257,6 +287,20 @@ class Player extends Definable implements Renderable, Updatable {
 
     private hasCollisionOnRight(): boolean {
         return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y + 1), 0, this.height - 2);
+    }
+
+    private isAimingLeft(): boolean {
+        if (state.mouseX !== null) {
+            return state.mouseX < this.x + this.width / 2 - getCameraX();
+        }
+        return false;
+    }
+
+    private isAimingUp(): boolean {
+        if (state.mouseY !== null) {
+            return state.mouseY < this.y + this.height / 2 - getCameraY();
+        }
+        return false;
     }
 }
 
