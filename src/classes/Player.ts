@@ -4,6 +4,8 @@ import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
 import Updatable from "../interfaces/Updatable";
 import baseFallVelocity from "../constants/baseFallVelocity";
+import blinkDuration from "../constants/blinkDuration";
+import blinkInterval from "../constants/blinkInterval";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
 import fallAcceleration from "../constants/fallAcceleration";
@@ -17,6 +19,7 @@ import state from "../state";
 import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
+    private blinkedAt: number = state.now;
     private direction: "left" | "right" = "right";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
@@ -28,6 +31,10 @@ class Player extends Definable implements Renderable, Updatable {
     private y: number = -32;
     public constructor() {
         super(nanoid());
+    }
+
+    public blink(): void {
+        this.blinkedAt = state.now;
     }
 
     public getHeight(): number {
@@ -58,6 +65,9 @@ class Player extends Definable implements Renderable, Updatable {
 
     public update(): void {
         const sinceUpdate: number = state.now - state.updatedAt;
+        if (state.now > blinkDuration + blinkInterval + this.blinkedAt) {
+            this.blink();
+        }
         if (this.hasCollisionOnBottom()) {
             const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
             if (typeof movementKey === "undefined") {
@@ -65,6 +75,7 @@ class Player extends Definable implements Renderable, Updatable {
                 this.walkedAt = null;
             }
             else {
+                this.blink();
                 if (this.walkedAt === null) {
                     this.walkedAt = state.now;
                 }
@@ -84,12 +95,20 @@ class Player extends Definable implements Renderable, Updatable {
         switch (this.direction) {
             case "left":
                 if (this.hasCollisionOnLeft() === false) {
-                    this.x -= this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                    const moved: number = this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                    if (moved > 0) {
+                        this.blink();
+                        this.x -= moved;
+                    }
                 }
                 break;
             case "right":
                 if (this.hasCollisionOnRight() === false) {
-                    this.x += this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                    const moved: number = this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                    if (moved > 0) {
+                        this.blink();
+                        this.x += moved;
+                    }
                 }
                 break;
         }
@@ -97,7 +116,11 @@ class Player extends Definable implements Renderable, Updatable {
             this.fallVelocity = baseFallVelocity;
         }
         else {
-            this.y += this.getFallableHeight();
+            const moved: number = this.getFallableHeight();
+            if (moved > 0) {
+                this.blink();
+                this.y += moved;
+            }
             if (this.fallVelocity < maxFallVelocity) {
                 this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
             }
@@ -171,6 +194,9 @@ class Player extends Definable implements Renderable, Updatable {
             return 0;
         }
         // Idle
+        if (state.now > this.blinkedAt + blinkInterval) {
+            return this.width;
+        }
         return 0;
     }
 

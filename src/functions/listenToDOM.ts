@@ -42,12 +42,18 @@ const listenToDOM = (): void => {
         });
         state.app.renderer.view.addEventListener("mousedown", (e: MouseEvent): void => {
             if (e.target instanceof HTMLCanvasElement) {
+                if (state.player !== null) {
+                    state.player.blink();
+                }
                 state.mouseHeld = true;
             }
         });
         state.app.renderer.view.addEventListener("mouseup", (e: MouseEvent): void => {
             e.preventDefault();
             if (e.target instanceof HTMLCanvasElement) {
+                if (state.player !== null) {
+                    state.player.blink();
+                }
                 state.mouseHeld = false;
             }
         });
