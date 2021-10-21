@@ -1,3 +1,3 @@
-const maxProjectilePower: number = 512;
+const maxProjectilePower: number = 384;
 
 export default maxProjectilePower;
