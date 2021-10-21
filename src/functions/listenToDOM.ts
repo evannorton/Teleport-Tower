@@ -1,7 +1,15 @@
+import screenHeight from "../constants/screenHeight";
+import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
 import state from "../state";
 
 const listenToDOM = (): void => {
+    addEventListener("beforeunload", (e: Event): void => {
+        if (document.body.classList.contains("playing")) {
+            e.preventDefault();
+            e.returnValue = false;
+        }
+    });
     addEventListener("resize", (): void => {
         sizeScreen();
     });
@@ -31,6 +39,23 @@ const listenToDOM = (): void => {
         });
         state.app.renderer.view.addEventListener("selectstart", (e: Event): void => {
             e.preventDefault();
+        });
+        state.app.renderer.view.addEventListener("mousedown", (e: MouseEvent): void => {
+            if (e.target instanceof HTMLCanvasElement) {
+                state.mouseHeld = true;
+            }
+        });
+        state.app.renderer.view.addEventListener("mouseup", (e: MouseEvent): void => {
+            e.preventDefault();
+            if (e.target instanceof HTMLCanvasElement) {
+                state.mouseHeld = false;
+            }
+        });
+        state.app.renderer.view.addEventListener("mousemove", (e: MouseEvent): void => {
+            if (e.target instanceof HTMLCanvasElement) {
+                state.mouseX = e.offsetX / e.target.offsetWidth * screenWidth;
+                state.mouseY = e.offsetY / e.target.offsetHeight * screenHeight;
+            }
         });
     }
 };

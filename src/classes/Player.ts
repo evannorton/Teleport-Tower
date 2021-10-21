@@ -59,27 +59,25 @@ class Player extends Definable implements Renderable, Updatable {
     public update(): void {
         const sinceUpdate: number = state.now - state.updatedAt;
         if (this.hasCollisionOnBottom()) {
-            if (state.heldKeys.length === 0) {
+            const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
+            if (typeof movementKey === "undefined") {
                 this.movementVelocity = 0;
                 this.walkedAt = null;
             }
             else {
-                const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-                if (typeof movementKey !== "undefined") {
-                    if (this.walkedAt === null) {
-                        this.walkedAt = state.now;
-                    }
-                    this.movementVelocity = movementVelocity;
-                    switch (movementKey) {
-                        case "a":
-                        case "arrowleft":
-                            this.direction = "left";
-                            break;
-                        case "d":
-                        case "arrowright":
-                            this.direction = "right";
-                            break;
-                    }
+                if (this.walkedAt === null) {
+                    this.walkedAt = state.now;
+                }
+                this.movementVelocity = movementVelocity;
+                switch (movementKey) {
+                    case "a":
+                    case "arrowleft":
+                        this.direction = "left";
+                        break;
+                    case "d":
+                    case "arrowright":
+                        this.direction = "right";
+                        break;
                 }
             }
         }
@@ -162,6 +160,10 @@ class Player extends Definable implements Renderable, Updatable {
             const sinceWalked: number = state.now - this.walkedAt;
             return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
         }
+        // Aiming
+        if (state.mouseHeld) {
+            return 0;
+        }
         // Idle
         return 0;
     }
@@ -183,6 +185,15 @@ class Player extends Definable implements Renderable, Updatable {
                     return this.height * 5;
                 case "right":
                     return this.height;
+            }
+        }
+        // Aiming
+        if (state.mouseHeld) {
+            switch (this.direction) {
+                case "left":
+                    return this.height * 6;
+                case "right":
+                    return this.height * 2;
             }
         }
         // Idle
