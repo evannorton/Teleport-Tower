@@ -4,7 +4,7 @@ import Player from "./classes/Player";
 const state: {
     app: Application | null;
     heldKeys: string[];
-    mouseHeld: boolean;
+    mouseHeldAt: number | null;
     mouseX: number | null;
     mouseY: number | null;
     now: number;
@@ -13,7 +13,7 @@ const state: {
 } = {
     app: null,
     heldKeys: [],
-    mouseHeld: false,
+    mouseHeldAt: null,
     mouseX: null,
     mouseY: null,
     now: performance.now(),

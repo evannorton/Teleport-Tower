@@ -45,7 +45,7 @@ const listenToDOM = (): void => {
                 if (state.player !== null) {
                     state.player.blink();
                 }
-                state.mouseHeld = true;
+                state.mouseHeldAt = state.now;
             }
         });
         state.app.renderer.view.addEventListener("mouseup", (e: MouseEvent): void => {
@@ -55,7 +55,7 @@ const listenToDOM = (): void => {
                     state.player.blink();
                     state.player.shoot();
                 }
-                state.mouseHeld = false;
+                state.mouseHeldAt = null;
             }
         });
         state.app.renderer.view.addEventListener("mousemove", (e: MouseEvent): void => {

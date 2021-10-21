@@ -9,13 +9,18 @@ import blinkDuration from "../constants/blinkDuration";
 import blinkInterval from "../constants/blinkInterval";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
+import drawRectangle from "../functions/draw/drawRectangle";
 import fallAcceleration from "../constants/fallAcceleration";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
+import maxProjectilePower from "../constants/maxProjectilePower";
+import minProjectilePower from "../constants/minProjectilePower";
 import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
+import projectileChargeLength from "../constants/projectileChargeLength";
+import screenHeight from "../constants/screenHeight";
 import state from "../state";
 import walkSpeed from "../constants/walkSpeed";
 
@@ -82,11 +87,25 @@ class Player extends Definable implements Renderable, Updatable {
                 drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 3);
             }
         }
+        if (state.mouseHeldAt !== null) {
+            const timeHeld: number = state.now - state.mouseHeldAt;
+            const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
+            const offset: number = 4;
+            const width: number = 80;
+            const height: number = 24;
+            if (this.hasCollisionOnBottom() && this.projectile === null) {
+                drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 5);
+                drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 5);
+            }
+        }
     }
 
     public shoot(): void {
-        if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null) {
-            const power: number = 128;
+        if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null && state.mouseHeldAt !== null) {
+            const range: number = maxProjectilePower - minProjectilePower;
+            const timeHeld: number = state.now - state.mouseHeldAt;
+            const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
+            const power: number = minProjectilePower + range * percent;
             const mouseRealX: number = state.mouseX + getCameraX();
             const mouseRealY: number = state.mouseY + getCameraY();
             const playerRealX: number = this.x + this.width / 2;
@@ -117,7 +136,7 @@ class Player extends Definable implements Renderable, Updatable {
         }
         if (this.hasCollisionOnBottom()) {
             const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-            if (state.mouseHeld || typeof movementKey === "undefined") {
+            if (state.mouseHeldAt !== null || typeof movementKey === "undefined") {
                 this.movementVelocity = 0;
                 this.walkedAt = null;
             }
@@ -231,7 +250,7 @@ class Player extends Definable implements Renderable, Updatable {
             return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
         }
         // Aiming
-        if (state.mouseHeld && state.mouseY !== null) {
+        if (state.mouseHeldAt !== null && state.mouseY !== null) {
             if (state.mouseY < this.y - getCameraY()) {
                 return this.width;
             }
@@ -267,7 +286,7 @@ class Player extends Definable implements Renderable, Updatable {
             }
         }
         // Aiming
-        if (state.mouseHeld && state.mouseX !== null) {
+        if (state.mouseHeldAt !== null && state.mouseX !== null) {
             if (this.isAimingLeft()) {
                 return this.height * 6;
             }
