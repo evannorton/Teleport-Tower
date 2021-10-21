@@ -161,7 +161,13 @@ class Player extends Definable implements Renderable, Updatable {
             return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
         }
         // Aiming
-        if (state.mouseHeld) {
+        if (state.mouseHeld && state.mouseY !== null) {
+            if (state.mouseY < this.y - getCameraY()) {
+                return this.width;
+            }
+            if (state.mouseY > this.y - getCameraY() + this.height) {
+                return this.width * 2;
+            }
             return 0;
         }
         // Idle
@@ -188,13 +194,11 @@ class Player extends Definable implements Renderable, Updatable {
             }
         }
         // Aiming
-        if (state.mouseHeld) {
-            switch (this.direction) {
-                case "left":
-                    return this.height * 6;
-                case "right":
-                    return this.height * 2;
+        if (state.mouseHeld && state.mouseX !== null) {
+            if (state.mouseX < this.x + this.width / 2 - getCameraX()) {
+                return this.height * 6;
             }
+            return this.height * 2;
         }
         // Idle
         switch (this.direction) {
