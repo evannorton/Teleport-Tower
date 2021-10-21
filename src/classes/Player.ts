@@ -14,14 +14,16 @@ import maxFallVelocity from "../constants/maxFallVelocity";
 import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import state from "../state";
+import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
+    private direction: "left" | "right" = "right";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
     private readonly map: string = "main";
-    private movementDirection: "left" | "right" | null = null;
     private movementVelocity: number = 0;
     private readonly width: number = 32;
+    private walkedAt: number | null = null;
     private x: number = 0;
     private y: number = -32;
     public constructor() {
@@ -49,7 +51,7 @@ class Player extends Definable implements Renderable, Updatable {
         if (typeof imageSources !== "undefined") {
             const image: Definable | undefined = imageSources.get("player");
             if (image instanceof ImageSource) {
-                drawImage(image, 0, 0, this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 3);
+                drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 3);
             }
         }
     }
@@ -58,26 +60,30 @@ class Player extends Definable implements Renderable, Updatable {
         const sinceUpdate: number = state.now - state.updatedAt;
         if (this.hasCollisionOnBottom()) {
             if (state.heldKeys.length === 0) {
-                this.movementDirection = null;
                 this.movementVelocity = 0;
+                this.walkedAt = null;
             }
             else {
                 const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-                switch (movementKey) {
-                    case "a":
-                    case "arrowleft":
-                        this.movementDirection = "left";
-                        this.movementVelocity = movementVelocity;
-                        break;
-                    case "d":
-                    case "arrowright":
-                        this.movementDirection = "right";
-                        this.movementVelocity = movementVelocity;
-                        break;
+                if (typeof movementKey !== "undefined") {
+                    if (this.walkedAt === null) {
+                        this.walkedAt = state.now;
+                    }
+                    this.movementVelocity = movementVelocity;
+                    switch (movementKey) {
+                        case "a":
+                        case "arrowleft":
+                            this.direction = "left";
+                            break;
+                        case "d":
+                        case "arrowright":
+                            this.direction = "right";
+                            break;
+                    }
                 }
             }
         }
-        switch (this.movementDirection) {
+        switch (this.direction) {
             case "left":
                 if (this.hasCollisionOnLeft() === false) {
                     this.x -= this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
@@ -143,6 +149,30 @@ class Player extends Definable implements Renderable, Updatable {
             }
             pixels.push(1);
         }
+    }
+
+    private getSourceX(): number {
+        if (this.walkedAt !== null) {
+            const totalDuration: number = walkSpeed * 5;
+            const sinceWalked: number = state.now - this.walkedAt;
+            return Math.floor(sinceWalked % totalDuration / walkSpeed) * this.width;
+        }
+        return 0;
+    }
+
+    private getSourceY(): number {
+        if (this.walkedAt !== null) {
+            switch (this.direction) {
+                case "left":
+                    return this.height * 5;
+                case "right":
+                    return this.height;
+            }
+        }
+        if (this.direction === "left") {
+            return this.height * 4;
+        }
+        return 0;
     }
 
     private hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {
