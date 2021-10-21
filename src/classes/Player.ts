@@ -70,7 +70,7 @@ class Player extends Definable implements Renderable, Updatable {
         }
         if (this.hasCollisionOnBottom()) {
             const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-            if (typeof movementKey === "undefined") {
+            if (state.mouseHeld || typeof movementKey === "undefined") {
                 this.movementVelocity = 0;
                 this.walkedAt = null;
             }
