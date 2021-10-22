@@ -52,7 +52,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     public render(): void {
-        drawRectangle("#ffffff", this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
+        drawRectangle("#ffffff", this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
     }
 
     public update(): void {

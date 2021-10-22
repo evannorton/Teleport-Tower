@@ -29,13 +29,13 @@ class Player extends Definable implements Renderable, Updatable {
     private direction: "left" | "right" = "right";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
-    private readonly map: string = "main";
+    private readonly map: string = "part1";
     private movementVelocity: number = 0;
     private projectile: Projectile | null = null;
     private readonly width: number = 32;
     private walkedAt: number | null = null;
-    private x: number = 224;
-    private y: number = 656;
+    private x: number = 12 * 16;
+    private y: number = 12 * 18;
     public constructor() {
         super(nanoid());
     }
@@ -84,7 +84,7 @@ class Player extends Definable implements Renderable, Updatable {
         if (typeof imageSources !== "undefined") {
             const image: Definable | undefined = imageSources.get("player");
             if (image instanceof ImageSource) {
-                drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 3);
+                drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
             }
         }
         if (state.mouseHeldAt !== null) {
@@ -94,8 +94,8 @@ class Player extends Definable implements Renderable, Updatable {
             const width: number = 80;
             const height: number = 24;
             if (this.hasCollisionOnBottom() && this.projectile === null) {
-                drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 5);
-                drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 5);
+                drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 6);
+                drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 6);
             }
         }
     }

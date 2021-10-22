@@ -1,3 +1,4 @@
+import Background from "../classes/Background";
 import Definable from "../classes/Definable";
 import Player from "../classes/Player";
 import Projectile from "../classes/Projectile";
@@ -9,6 +10,7 @@ import screenWidth from "../constants/screenWidth";
 import state from "../state";
 
 const render = (): void => {
+    const backgrounds: Map<string, Definable> | undefined = definables.get("Background");
     const players: Map<string, Definable> | undefined = definables.get("Player");
     const projectiles: Map<string, Definable> | undefined = definables.get("Projectile");
     const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
@@ -33,6 +35,13 @@ const render = (): void => {
             projectiles.forEach((projectile: Definable): void => {
                 if (projectile instanceof Projectile) {
                     projectile.render();
+                }
+            });
+        }
+        if (typeof backgrounds !== "undefined") {
+            backgrounds.forEach((background: Definable): void => {
+                if (background instanceof Background) {
+                    background.render();
                 }
             });
         }
