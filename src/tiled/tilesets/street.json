@@ -8916,7 +8916,7 @@
                 {
                  "name":"collision",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }]
         }, 
         {

@@ -1,4 +1,5 @@
 import Background from "../classes/Background";
+import Cutscene from "../classes/Cutscene";
 import Definable from "../classes/Definable";
 import Player from "../classes/Player";
 import Projectile from "../classes/Projectile";
@@ -11,6 +12,7 @@ import state from "../state";
 
 const render = (): void => {
     const backgrounds: Map<string, Definable> | undefined = definables.get("Background");
+    const cutscenes: Map<string, Definable> | undefined = definables.get("Cutscene");
     const players: Map<string, Definable> | undefined = definables.get("Player");
     const projectiles: Map<string, Definable> | undefined = definables.get("Projectile");
     const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
@@ -42,6 +44,13 @@ const render = (): void => {
             backgrounds.forEach((background: Definable): void => {
                 if (background instanceof Background) {
                     background.render();
+                }
+            });
+        }
+        if (typeof cutscenes !== "undefined") {
+            cutscenes.forEach((cutscene: Definable): void => {
+                if (cutscene instanceof Cutscene) {
+                    cutscene.render();
                 }
             });
         }

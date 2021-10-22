@@ -26,7 +26,7 @@ import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
     private blinkedAt: number = state.now;
-    private direction: "left" | "right" = "right";
+    private direction: "left" | "right" = "left";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
     private readonly map: string = "part1";
@@ -34,8 +34,8 @@ class Player extends Definable implements Renderable, Updatable {
     private projectile: Projectile | null = null;
     private readonly width: number = 32;
     private walkedAt: number | null = null;
-    private x: number = 12 * 16;
-    private y: number = 12 * 18;
+    private x: number = 180;
+    private y: number = 816;
     public constructor() {
         super(nanoid());
     }
@@ -80,22 +80,24 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public render(): void {
-        const imageSources: Map<string, Definable> | undefined = definables.get("ImageSource");
-        if (typeof imageSources !== "undefined") {
-            const image: Definable | undefined = imageSources.get("player");
-            if (image instanceof ImageSource) {
-                drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
+        if (state.cutscene === null) {
+            const imageSources: Map<string, Definable> | undefined = definables.get("ImageSource");
+            if (typeof imageSources !== "undefined") {
+                const image: Definable | undefined = imageSources.get("player");
+                if (image instanceof ImageSource) {
+                    drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
+                }
             }
-        }
-        if (state.mouseHeldAt !== null) {
-            const timeHeld: number = state.now - state.mouseHeldAt;
-            const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
-            const offset: number = 4;
-            const width: number = 80;
-            const height: number = 24;
-            if (this.hasCollisionOnBottom() && this.projectile === null) {
-                drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 6);
-                drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 6);
+            if (state.mouseHeldAt !== null) {
+                const timeHeld: number = state.now - state.mouseHeldAt;
+                const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
+                const offset: number = 4;
+                const width: number = 80;
+                const height: number = 24;
+                if (this.hasCollisionOnBottom() && this.projectile === null) {
+                    drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 6);
+                    drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 6);
+                }
             }
         }
     }
@@ -131,76 +133,78 @@ class Player extends Definable implements Renderable, Updatable {
 
     public update(): void {
         const sinceUpdate: number = state.now - state.updatedAt;
-        if (state.now > blinkDuration + blinkInterval + this.blinkedAt) {
-            this.blink();
-        }
-        if (this.hasCollisionOnBottom()) {
-            const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-            if (state.mouseHeldAt !== null || typeof movementKey === "undefined") {
-                this.movementVelocity = 0;
-                this.walkedAt = null;
-            }
-            else {
+        if (state.cutscene === null) {
+            if (state.now > blinkDuration + blinkInterval + this.blinkedAt) {
                 this.blink();
-                if (this.walkedAt === null) {
-                    this.walkedAt = state.now;
-                }
-                this.movementVelocity = movementVelocity;
-                switch (movementKey) {
-                    case "a":
-                    case "arrowleft":
-                        this.direction = "left";
-                        break;
-                    case "d":
-                    case "arrowright":
-                        this.direction = "right";
-                        break;
-                }
             }
-        }
-        switch (this.direction) {
-            case "left":
-                if (this.hasCollisionOnLeft() === false) {
-                    const moved: number = this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
-                    if (moved > 0) {
-                        if (state.mouseHeldAt !== null) {
-                            state.mouseHeldAt = state.now;
-                        }
-                        this.blink();
-                        this.x -= moved;
+            if (this.hasCollisionOnBottom()) {
+                const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
+                if (state.mouseHeldAt !== null || typeof movementKey === "undefined") {
+                    this.movementVelocity = 0;
+                    this.walkedAt = null;
+                }
+                else {
+                    this.blink();
+                    if (this.walkedAt === null) {
+                        this.walkedAt = state.now;
+                    }
+                    this.movementVelocity = movementVelocity;
+                    switch (movementKey) {
+                        case "a":
+                        case "arrowleft":
+                            this.direction = "left";
+                            break;
+                        case "d":
+                        case "arrowright":
+                            this.direction = "right";
+                            break;
                     }
                 }
-                break;
-            case "right":
-                if (this.hasCollisionOnRight() === false) {
-                    const moved: number = this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
-                    if (moved > 0) {
-                        if (state.mouseHeldAt !== null) {
-                            state.mouseHeldAt = state.now;
-                        }
-                        this.blink();
-                        this.x += moved;
-                    }
-                }
-                break;
-        }
-        if (this.hasCollisionOnBottom()) {
-            this.fallVelocity = baseFallVelocity;
-        }
-        else {
-            const moved: number = this.getFallableHeight();
-            if (moved > 0) {
-                if (state.mouseHeldAt !== null) {
-                    state.mouseHeldAt = state.now;
-                }
-                this.blink();
-                this.y += moved;
             }
-            if (this.fallVelocity < maxFallVelocity) {
-                this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
+            switch (this.direction) {
+                case "left":
+                    if (this.hasCollisionOnLeft() === false) {
+                        const moved: number = this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                        if (moved > 0) {
+                            if (state.mouseHeldAt !== null) {
+                                state.mouseHeldAt = state.now;
+                            }
+                            this.blink();
+                            this.x -= moved;
+                        }
+                    }
+                    break;
+                case "right":
+                    if (this.hasCollisionOnRight() === false) {
+                        const moved: number = this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
+                        if (moved > 0) {
+                            if (state.mouseHeldAt !== null) {
+                                state.mouseHeldAt = state.now;
+                            }
+                            this.blink();
+                            this.x += moved;
+                        }
+                    }
+                    break;
+            }
+            if (this.hasCollisionOnBottom()) {
+                this.fallVelocity = baseFallVelocity;
             }
             else {
-                this.fallVelocity = maxFallVelocity;
+                const moved: number = this.getFallableHeight();
+                if (moved > 0) {
+                    if (state.mouseHeldAt !== null) {
+                        state.mouseHeldAt = state.now;
+                    }
+                    this.blink();
+                    this.y += moved;
+                }
+                if (this.fallVelocity < maxFallVelocity) {
+                    this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
+                }
+                else {
+                    this.fallVelocity = maxFallVelocity;
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ import Player from "./classes/Player";
 
 const state: {
     app: Application | null;
+    cutscene: string | null;
     heldKeys: string[];
     mouseHeldAt: number | null;
     mouseX: number | null;
@@ -12,6 +13,7 @@ const state: {
     updatedAt: number;
 } = {
     app: null,
+    cutscene: "intro",
     heldKeys: [],
     mouseHeldAt: null,
     mouseX: null,
