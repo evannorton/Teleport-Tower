@@ -26,6 +26,8 @@ import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
     private blinkedAt: number = state.now;
+    private readonly collisionLeftOffset: number = 8;
+    private readonly collisionRightOffset: number = 8;
     private direction: "left" | "right" = "left";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
@@ -103,7 +105,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public shoot(): void {
-        if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null && state.mouseHeldAt !== null) {
+        if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null && state.mouseHeldAt !== null && state.cutscene === null) {
             const range: number = maxProjectilePower - minProjectilePower;
             const timeHeld: number = state.now - state.mouseHeldAt;
             const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
@@ -207,6 +209,9 @@ class Player extends Definable implements Renderable, Updatable {
                 }
             }
         }
+        else {
+            this.blink();
+        }
     }
 
     private getFallableHeight(): number {
@@ -216,7 +221,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (y >= sinceUpdate * this.fallVelocity / 1000) {
                 return sinceUpdate * this.fallVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y + this.height + y), this.width - 2, 0)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset + 1), Math.round(this.y + this.height + y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0)) {
                 return getSumOfNumbers(pixels);
             }
             pixels.push(1);
@@ -230,7 +235,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y + 1), 0, this.height - 2)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset - x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
             }
             pixels.push(1);
@@ -244,7 +249,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y + 1), 0, this.height - 2)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset + x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
             }
             pixels.push(1);
@@ -327,15 +332,15 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private hasCollisionOnBottom(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x) + 1, Math.round(this.y + this.height), this.width - 2, 0);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset) + 1, Math.round(this.y + this.height), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0);
     }
 
     private hasCollisionOnLeft(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x), Math.round(this.y + 1), 0, this.height - 2);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset), Math.round(this.y + 1), 0, this.height - 2);
     }
 
     private hasCollisionOnRight(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y + 1), 0, this.height - 2);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset), Math.round(this.y + 1), 0, this.height - 2);
     }
 
     private isAimingLeft(): boolean {
