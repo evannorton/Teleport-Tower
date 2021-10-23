@@ -86,6 +86,22 @@ class Player extends Definable implements Renderable, Updatable {
         return this.map === map;
     }
 
+    public playMusic(): void {
+        const music: Map<string, Definable> | undefined = definables.get("Music");
+        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
+        if (typeof music !== "undefined" && typeof tilemaps !== "undefined") {
+            music.forEach((track: Definable | undefined): void => {
+                if (track instanceof Music) {
+                    track.stop();
+                }
+            });
+            const tilemap: Definable | undefined = tilemaps.get(this.map);
+            if (tilemap instanceof Tilemap) {
+                tilemap.playMusic();
+            }
+        }
+    }
+
     public render(): void {
         if (state.cutscene === null) {
             const imageSources: Map<string, Definable> | undefined = definables.get("ImageSource");
@@ -382,22 +398,6 @@ class Player extends Definable implements Renderable, Updatable {
             return state.mouseY < this.y + this.height / 2 - getCameraY();
         }
         return false;
-    }
-
-    private playMusic(): void {
-        const music: Map<string, Definable> | undefined = definables.get("Music");
-        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
-        if (typeof music !== "undefined" && typeof tilemaps !== "undefined") {
-            music.forEach((track: Definable | undefined): void => {
-                if (track instanceof Music) {
-                    track.stop();
-                }
-            });
-            const tilemap: Definable | undefined = tilemaps.get(this.map);
-            if (tilemap instanceof Tilemap) {
-                tilemap.playMusic();
-            }
-        }
     }
 
     private transport(): void {
