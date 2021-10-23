@@ -5,6 +5,7 @@ import TiledTilemapLayer from "../interfaces/tiled/TiledTilemapLayer";
 import TiledTilemapLayerChunk from "../interfaces/tiled/TiledTilemapLayerChunk";
 import TiledTilemapTileset from "../interfaces/tiled/TiledTilemapTileset";
 import Tileset from "./Tileset";
+import Transport from "./Transport";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
 import getCameraX from "../functions/getCameraX";
@@ -28,6 +29,41 @@ class Tilemap extends Definable implements Renderable {
 
     public getTiledTilemap(): TiledTilemap | null {
         return this.tiledTilemap;
+    }
+
+    public getTransportInRectangle(x: number, y: number, width: number, height: number): Transport | null {
+        if (this.tiledTilemap !== null) {
+            for (const layer of this.tiledTilemap.layers) {
+                switch (layer.name) {
+                    case "transports":
+                        if (typeof layer.chunks !== "undefined") {
+                            for (const chunk of layer.chunks) {
+                                let key: number = 0;
+                                for (const datum of chunk.data) {
+                                    const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
+                                    if (typeof tiledTileset !== "undefined") {
+                                        const tileID: number = datum - tiledTileset.firstgid;
+                                        const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
+                                        if (typeof tilesets !== "undefined") {
+                                            const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
+                                            if (tileset instanceof Tileset) {
+                                                const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
+                                                const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                if (rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
+                                                    return tileset.getTransportAtTile(tileID);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    key++;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+        return null;
     }
 
     public hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {

@@ -10,6 +10,7 @@ import getCameraY from "../functions/getCameraY";
 import getSumOfNumbers from "../functions/getSumOfNumbers";
 import { nanoid } from "nanoid";
 import projectileDuration from "../constants/projectileDuration";
+import screenWidth from "../constants/screenWidth";
 import state from "../state";
 
 class Projectile extends Definable implements Renderable, Updatable {
@@ -96,6 +97,10 @@ class Projectile extends Definable implements Renderable, Updatable {
                         this.y += this.getBottomMovableHeight();
                     }
                     break;
+            }
+            if (this.x < 0 || this.x > screenWidth - this.width) {
+                this.list.delete(this.slug);
+                this.player.cancelTeleport();
             }
         }
     }

@@ -3,6 +3,7 @@ import ImageSource from "./ImageSource";
 import Projectile from "./Projectile";
 import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
+import Transport from "./Transport";
 import Updatable from "../interfaces/Updatable";
 import baseFallVelocity from "../constants/baseFallVelocity";
 import blinkDuration from "../constants/blinkDuration";
@@ -31,7 +32,7 @@ class Player extends Definable implements Renderable, Updatable {
     private direction: "left" | "right" = "left";
     private fallVelocity: number = baseFallVelocity;
     private readonly height: number = 32;
-    private readonly map: string = "part1";
+    private map: string = "part1";
     private movementVelocity: number = 0;
     private projectile: Projectile | null = null;
     private readonly width: number = 32;
@@ -54,11 +55,15 @@ class Player extends Definable implements Renderable, Updatable {
             if (typeof tilemaps !== "undefined") {
                 const tilemap: Definable | undefined = tilemaps.get(this.map);
                 if (tilemap instanceof Tilemap) {
-                    return tilemap.hasCollisionInRectangle(x, y, this.width, this.height) === false;
+                    return tilemap.hasCollisionInRectangle(x + this.collisionLeftOffset, y, this.width - this.collisionLeftOffset - this.collisionRightOffset, this.height) === false;
                 }
             }
         }
         return false;
+    }
+
+    public cancelTeleport(): void {
+        this.projectile = null;
     }
 
     public getHeight(): number {
@@ -130,6 +135,7 @@ class Player extends Definable implements Renderable, Updatable {
             this.movementVelocity = 0;
             this.fallVelocity = baseFallVelocity;
             this.projectile = null;
+            this.transport();
         }
     }
 
@@ -173,6 +179,7 @@ class Player extends Definable implements Renderable, Updatable {
                             }
                             this.blink();
                             this.x -= moved;
+                            this.transport();
                         }
                     }
                     break;
@@ -185,6 +192,7 @@ class Player extends Definable implements Renderable, Updatable {
                             }
                             this.blink();
                             this.x += moved;
+                            this.transport();
                         }
                     }
                     break;
@@ -200,6 +208,7 @@ class Player extends Definable implements Renderable, Updatable {
                     }
                     this.blink();
                     this.y += moved;
+                    this.transport();
                 }
                 if (this.fallVelocity < maxFallVelocity) {
                     this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
@@ -320,6 +329,17 @@ class Player extends Definable implements Renderable, Updatable {
         return 0;
     }
 
+    private getTransport(): Transport | null {
+        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
+        if (typeof tilemaps !== "undefined") {
+            const tilemap: Definable | undefined = tilemaps.get(this.map);
+            if (tilemap instanceof Tilemap) {
+                return tilemap.getTransportInRectangle(this.x + this.collisionLeftOffset, this.y, this.width - this.collisionLeftOffset - this.collisionRightOffset, this.height);
+            }
+        }
+        return null;
+    }
+
     private hasCollisionInRectangle(x: number, y: number, width: number, height: number): boolean {
         const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
         if (typeof tilemaps !== "undefined") {
@@ -355,6 +375,15 @@ class Player extends Definable implements Renderable, Updatable {
             return state.mouseY < this.y + this.height / 2 - getCameraY();
         }
         return false;
+    }
+
+    private transport(): void {
+        const transport: Transport | null = this.getTransport();
+        if (transport !== null) {
+            this.x = transport.getX();
+            this.y = transport.getY();
+            this.map = transport.getMap().getSlug();
+        }
     }
 }
 
