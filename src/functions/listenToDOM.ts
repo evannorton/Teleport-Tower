@@ -5,10 +5,8 @@ import state from "../state";
 
 const listenToDOM = (): void => {
     addEventListener("beforeunload", (e: Event): void => {
-        if (document.body.classList.contains("playing")) {
-            e.preventDefault();
-            e.returnValue = false;
-        }
+        e.preventDefault();
+        e.returnValue = false;
     });
     addEventListener("resize", (): void => {
         sizeScreen();
