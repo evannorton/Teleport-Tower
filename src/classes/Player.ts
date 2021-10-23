@@ -1,5 +1,6 @@
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
+import Music from "./Music";
 import Projectile from "./Projectile";
 import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
@@ -383,6 +384,22 @@ class Player extends Definable implements Renderable, Updatable {
         return false;
     }
 
+    private playMusic(): void {
+        const music: Map<string, Definable> | undefined = definables.get("Music");
+        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
+        if (typeof music !== "undefined" && typeof tilemaps !== "undefined") {
+            music.forEach((track: Definable | undefined): void => {
+                if (track instanceof Music) {
+                    track.stop();
+                }
+            });
+            const tilemap: Definable | undefined = tilemaps.get(this.map);
+            if (tilemap instanceof Tilemap) {
+                tilemap.playMusic();
+            }
+        }
+    }
+
     private transport(): void {
         const transport: Transport | null = this.getTransport();
         if (transport !== null) {
@@ -393,6 +410,7 @@ class Player extends Definable implements Renderable, Updatable {
                 this.projectile.remove();
                 this.projectile = null;
             }
+            this.playMusic();
         }
     }
 }
