@@ -389,6 +389,10 @@ class Player extends Definable implements Renderable, Updatable {
             this.x = transport.getX();
             this.y = transport.getY();
             this.map = transport.getMap().getSlug();
+            if (this.projectile !== null) {
+                this.projectile.remove();
+                this.projectile = null;
+            }
         }
     }
 }
