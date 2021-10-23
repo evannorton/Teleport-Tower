@@ -3,11 +3,8 @@ import Definable from "../classes/Definable";
 import Player from "../classes/Player";
 import Projectile from "../classes/Projectile";
 import definables from "../maps/definables";
-import state from "../state";
-import ticksPerSecond from "../constants/ticksPerSecond";
 
 const update = (): void => {
-    state.now += 1000 / ticksPerSecond;
     const cutscenes: Map<string, Definable> | undefined = definables.get("Cutscene");
     const players: Map<string, Definable> | undefined = definables.get("Player");
     const projectiles: Map<string, Definable> | undefined = definables.get("Projectile");
@@ -32,7 +29,6 @@ const update = (): void => {
             }
         });
     }
-    state.updatedAt = state.now;
 };
 
 export default update;

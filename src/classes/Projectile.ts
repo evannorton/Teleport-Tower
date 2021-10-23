@@ -106,7 +106,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getBottomMovableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
             if (y >= sinceUpdate * this.yVelocity / 1000) {
@@ -120,7 +120,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getLeftMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.xVelocity / 1000) {
@@ -134,7 +134,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getRightMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.xVelocity / 1000) {
@@ -148,7 +148,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getTopMovableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
             if (y >= sinceUpdate * this.yVelocity / 1000) {

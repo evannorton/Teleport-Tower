@@ -10,7 +10,7 @@ const state: {
     mouseY: number | null;
     now: number;
     player: Player | null;
-    updatedAt: number;
+    tickedAt: number;
 } = {
     app: null,
     cutscene: "intro",
@@ -20,7 +20,7 @@ const state: {
     mouseY: null,
     now: performance.now(),
     player: null,
-    updatedAt: 0
+    tickedAt: 0
 };
 
 export default state;

@@ -140,7 +140,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public update(): void {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         if (state.cutscene === null) {
             if (state.now > blinkDuration + blinkInterval + this.blinkedAt) {
                 this.blink();
@@ -224,7 +224,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getFallableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
             if (y >= sinceUpdate * this.fallVelocity / 1000) {
@@ -238,7 +238,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getLeftMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
@@ -252,7 +252,7 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getRightMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
+        const sinceUpdate: number = state.now - state.tickedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
