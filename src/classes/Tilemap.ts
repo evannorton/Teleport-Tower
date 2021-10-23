@@ -75,7 +75,7 @@ class Tilemap extends Definable implements Renderable {
                     case "below":
                         if (typeof layer.layers !== "undefined") {
                             for (const innerLayer of layer.layers) {
-                                if (typeof innerLayer.chunks !== "undefined") {
+                                if (innerLayer.name !== "bg" && typeof innerLayer.chunks !== "undefined") {
                                     for (const chunk of innerLayer.chunks) {
                                         if (rectanglesOverlap(x - 1, y - 1, width + 2, height + 2, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
                                             let key: number = 0;
