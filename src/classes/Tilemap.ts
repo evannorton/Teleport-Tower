@@ -11,6 +11,8 @@ import drawImage from "../functions/draw/drawImage";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import rectanglesOverlap from "../functions/rectanglesOverlap";
+import screenHeight from "../constants/screenHeight";
+import screenWidth from "../constants/screenWidth";
 import state from "../state";
 import tileHeight from "../constants/tileHeight";
 import tileWidth from "../constants/tileWidth";
@@ -111,72 +113,95 @@ class Tilemap extends Definable implements Renderable {
 
     public render(): void {
         if (this.tiledTilemap !== null && state.player !== null && state.player.isOnMap(this.slug)) {
-            this.tiledTilemap.layers.forEach((layer: TiledTilemapLayer): void => {
+            const cameraX: number = getCameraX();
+            const cameraY: number = getCameraY();
+            for (let iA: number = 0; iA < this.tiledTilemap.layers.length; iA++) {
+                const layer: TiledTilemapLayer = this.tiledTilemap.layers[iA];
                 switch (layer.name) {
                     case "above":
                         if (typeof layer.layers !== "undefined") {
-                            layer.layers.forEach((innerLayer: TiledTilemapLayer): void => {
+                            for (let iB: number = 0; iB < layer.layers.length; iB++) {
+                                const innerLayer: TiledTilemapLayer = layer.layers[iB];
                                 if (typeof innerLayer.chunks !== "undefined") {
-                                    innerLayer.chunks.forEach((chunk: TiledTilemapLayerChunk): void => {
-                                        chunk.data.forEach((datum: number, key: number): void => {
-                                            if (this.tiledTilemap !== null) {
-                                                const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
-                                                if (typeof tiledTileset !== "undefined") {
+                                    for (let iC: number = 0; iC < innerLayer.chunks.length; iC++) {
+                                        const chunk: TiledTilemapLayerChunk = innerLayer.chunks[iC];
+                                        if (rectanglesOverlap(cameraX, cameraY, screenWidth, screenHeight, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                            for (let iD: number = 0; iD < chunk.data.length; iD++) {
+                                                const datum: number = chunk.data[iD];
+                                                let tiledTileset: TiledTilemapTileset | null = null;
+                                                for (let iE: number = this.tiledTilemap.tilesets.length - 1; iE >= 0; iE--) {
+                                                    const tileset: TiledTilemapTileset = this.tiledTilemap.tilesets[iE];
+                                                    if (tileset.firstgid <= datum) {
+                                                        tiledTileset = tileset;
+                                                        break;
+                                                    }
+                                                }
+                                                if (tiledTileset !== null) {
                                                     const tileID: number = datum - tiledTileset.firstgid;
                                                     const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
                                                     if (typeof tilesets !== "undefined") {
                                                         const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
                                                         if (tileset instanceof Tileset) {
-                                                            const x: number = (chunk.x + key % chunk.width) * tileWidth;
-                                                            const y: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                            const x: number = (chunk.x + iD % chunk.width) * tileWidth;
+                                                            const y: number = (chunk.y + Math.floor(iD / chunk.width)) * tileHeight;
                                                             const tileX: number | null = tileset.getTileX(tileID);
                                                             const tileY: number | null = tileset.getTileY(tileID);
                                                             if (tileX !== null && tileY !== null) {
-                                                                drawImage(tileset.getImage(), tileX * tileWidth, tileY * tileHeight, tileWidth, tileHeight, x - getCameraX(), y - getCameraY(), tileWidth, tileHeight, 7);
+                                                                drawImage(tileset.getImage(), tileX * tileWidth, tileY * tileHeight, tileWidth, tileHeight, x - cameraX, y - cameraY, tileWidth, tileHeight, 7);
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
-                                        });
-                                    });
+                                        }
+                                    }
                                 }
-                            });
+                            }
                         }
                         break;
                     case "below":
                         if (typeof layer.layers !== "undefined") {
-                            layer.layers.forEach((innerLayer: TiledTilemapLayer): void => {
+                            for (let iB: number = 0; iB < layer.layers.length; iB++) {
+                                const innerLayer: TiledTilemapLayer = layer.layers[iB];
                                 if (typeof innerLayer.chunks !== "undefined") {
-                                    innerLayer.chunks.forEach((chunk: TiledTilemapLayerChunk): void => {
-                                        chunk.data.forEach((datum: number, key: number): void => {
-                                            if (this.tiledTilemap !== null) {
-                                                const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
-                                                if (typeof tiledTileset !== "undefined") {
+                                    for (let iC: number = 0; iC < innerLayer.chunks.length; iC++) {
+                                        const chunk: TiledTilemapLayerChunk = innerLayer.chunks[iC];
+                                        if (rectanglesOverlap(cameraX, cameraY, screenWidth, screenHeight, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                            for (let iD: number = 0; iD < chunk.data.length; iD++) {
+                                                const datum: number = chunk.data[iD];
+                                                let tiledTileset: TiledTilemapTileset | null = null;
+                                                for (let iE: number = this.tiledTilemap.tilesets.length - 1; iE >= 0; iE--) {
+                                                    const tileset: TiledTilemapTileset = this.tiledTilemap.tilesets[iE];
+                                                    if (tileset.firstgid <= datum) {
+                                                        tiledTileset = tileset;
+                                                        break;
+                                                    }
+                                                }
+                                                if (tiledTileset !== null) {
                                                     const tileID: number = datum - tiledTileset.firstgid;
                                                     const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
                                                     if (typeof tilesets !== "undefined") {
                                                         const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
                                                         if (tileset instanceof Tileset) {
-                                                            const x: number = (chunk.x + key % chunk.width) * tileWidth;
-                                                            const y: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                            const x: number = (chunk.x + iD % chunk.width) * tileWidth;
+                                                            const y: number = (chunk.y + Math.floor(iD / chunk.width)) * tileHeight;
                                                             const tileX: number | null = tileset.getTileX(tileID);
                                                             const tileY: number | null = tileset.getTileY(tileID);
                                                             if (tileX !== null && tileY !== null) {
-                                                                drawImage(tileset.getImage(), tileX * tileWidth, tileY * tileHeight, tileWidth, tileHeight, x - getCameraX(), y - getCameraY(), tileWidth, tileHeight, 3);
+                                                                drawImage(tileset.getImage(), tileX * tileWidth, tileY * tileHeight, tileWidth, tileHeight, x - cameraX, y - cameraY, tileWidth, tileHeight, 3);
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
-                                        });
-                                    });
+                                        }
+                                    }
                                 }
-                            });
+                            }
                         }
                         break;
                 }
-            });
+            }
         }
     }
 }
