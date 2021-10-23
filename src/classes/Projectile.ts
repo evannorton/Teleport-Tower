@@ -12,6 +12,7 @@ import { nanoid } from "nanoid";
 import projectileDuration from "../constants/projectileDuration";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
+import step from "../constants/step";
 
 class Projectile extends Definable implements Renderable, Updatable {
     private readonly height: number = 4;
@@ -106,11 +107,10 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getBottomMovableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
-            if (y >= sinceUpdate * this.yVelocity / 1000) {
-                return sinceUpdate * this.yVelocity / 1000;
+            if (y >= step * this.yVelocity / 1000) {
+                return step * this.yVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y + this.height + y), this.width - 2, 0)) {
                 return getSumOfNumbers(pixels);
@@ -120,11 +120,10 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getLeftMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * this.xVelocity / 1000) {
-                return sinceUpdate * this.xVelocity / 1000;
+            if (x >= step * this.xVelocity / 1000) {
+                return step * this.xVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
@@ -134,11 +133,10 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getRightMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * this.xVelocity / 1000) {
-                return sinceUpdate * this.xVelocity / 1000;
+            if (x >= step * this.xVelocity / 1000) {
+                return step * this.xVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
@@ -148,11 +146,10 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private getTopMovableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
-            if (y >= sinceUpdate * this.yVelocity / 1000) {
-                return sinceUpdate * this.yVelocity / 1000;
+            if (y >= step * this.yVelocity / 1000) {
+                return step * this.yVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y - y), this.width - 2, 0)) {
                 return getSumOfNumbers(pixels);

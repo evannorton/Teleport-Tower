@@ -4,6 +4,7 @@ import Player from "./classes/Player";
 const state: {
     app: Application | null;
     cutscene: string | null;
+    deltaTime: number;
     heldKeys: string[];
     mouseHeldAt: number | null;
     mouseX: number | null;
@@ -14,6 +15,7 @@ const state: {
 } = {
     app: null,
     cutscene: "intro",
+    deltaTime: 0,
     heldKeys: [],
     mouseHeldAt: null,
     mouseX: null,

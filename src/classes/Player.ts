@@ -23,6 +23,7 @@ import { nanoid } from "nanoid";
 import projectileChargeLength from "../constants/projectileChargeLength";
 import screenHeight from "../constants/screenHeight";
 import state from "../state";
+import step from "../constants/step";
 import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
@@ -140,7 +141,6 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public update(): void {
-        const sinceUpdate: number = state.now - state.updatedAt;
         if (state.cutscene === null) {
             if (state.now > blinkDuration + blinkInterval + this.blinkedAt) {
                 this.blink();
@@ -211,7 +211,7 @@ class Player extends Definable implements Renderable, Updatable {
                     this.transport();
                 }
                 if (this.fallVelocity < maxFallVelocity) {
-                    this.fallVelocity = Math.min(this.fallVelocity + sinceUpdate * fallAcceleration / 1000, maxFallVelocity);
+                    this.fallVelocity = Math.min(this.fallVelocity + step * fallAcceleration / 1000, maxFallVelocity);
                 }
                 else {
                     this.fallVelocity = maxFallVelocity;
@@ -224,11 +224,10 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getFallableHeight(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let y: number = 0; true; y++) {
-            if (y >= sinceUpdate * this.fallVelocity / 1000) {
-                return sinceUpdate * this.fallVelocity / 1000;
+            if (y >= step * this.fallVelocity / 1000) {
+                return step * this.fallVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset + 1), Math.round(this.y + this.height + y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0)) {
                 return getSumOfNumbers(pixels);
@@ -238,11 +237,10 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getLeftMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * this.movementVelocity / 1000) {
-                return sinceUpdate * this.movementVelocity / 1000;
+            if (x >= step * this.movementVelocity / 1000) {
+                return step * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset - x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
@@ -252,11 +250,10 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     private getRightMovableWidth(): number {
-        const sinceUpdate: number = state.now - state.updatedAt;
         const pixels: number[] = [];
         for (let x: number = 0; true; x++) {
-            if (x >= sinceUpdate * this.movementVelocity / 1000) {
-                return sinceUpdate * this.movementVelocity / 1000;
+            if (x >= step * this.movementVelocity / 1000) {
+                return step * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset + x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return getSumOfNumbers(pixels);
