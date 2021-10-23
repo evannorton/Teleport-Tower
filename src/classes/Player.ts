@@ -14,7 +14,6 @@ import drawRectangle from "../functions/draw/drawRectangle";
 import fallAcceleration from "../constants/fallAcceleration";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
-import getSumOfNumbers from "../functions/getSumOfNumbers";
 import maxFallVelocity from "../constants/maxFallVelocity";
 import maxProjectilePower from "../constants/maxProjectilePower";
 import minProjectilePower from "../constants/minProjectilePower";
@@ -146,8 +145,15 @@ class Player extends Definable implements Renderable, Updatable {
                 this.blink();
             }
             if (this.hasCollisionOnBottom()) {
-                const movementKey: string | undefined = [...state.heldKeys].reverse().find((key: string): boolean => ["a", "d", "arrowleft", "arrowright"].includes(key));
-                if (state.mouseHeldAt !== null || typeof movementKey === "undefined") {
+                let movementKey: string | null = null;
+                for (let iA: number = state.heldKeys.length - 1; iA >= 0; iA--) {
+                    const key: string = state.heldKeys[iA];
+                    if (["a", "d", "arrowleft", "arrowright"].includes(key)) {
+                        movementKey = key;
+                        break;
+                    }
+                }
+                if (state.mouseHeldAt !== null || movementKey === null) {
                     this.movementVelocity = 0;
                     this.walkedAt = null;
                 }
@@ -225,43 +231,43 @@ class Player extends Definable implements Renderable, Updatable {
 
     private getFallableHeight(): number {
         const sinceUpdate: number = state.now - state.tickedAt;
-        const pixels: number[] = [];
+        let pixels: number = 0;
         for (let y: number = 0; true; y++) {
             if (y >= sinceUpdate * this.fallVelocity / 1000) {
                 return sinceUpdate * this.fallVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset + 1), Math.round(this.y + this.height + y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0)) {
-                return getSumOfNumbers(pixels);
+                return pixels;
             }
-            pixels.push(1);
+            pixels++;
         }
     }
 
     private getLeftMovableWidth(): number {
         const sinceUpdate: number = state.now - state.tickedAt;
-        const pixels: number[] = [];
+        let pixels: number = 0;
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset - x), Math.round(this.y + 1), 0, this.height - 2)) {
-                return getSumOfNumbers(pixels);
+                return pixels;
             }
-            pixels.push(1);
+            pixels++;
         }
     }
 
     private getRightMovableWidth(): number {
         const sinceUpdate: number = state.now - state.tickedAt;
-        const pixels: number[] = [];
+        let pixels: number = 0;
         for (let x: number = 0; true; x++) {
             if (x >= sinceUpdate * this.movementVelocity / 1000) {
                 return sinceUpdate * this.movementVelocity / 1000;
             }
             if (this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset + x), Math.round(this.y + 1), 0, this.height - 2)) {
-                return getSumOfNumbers(pixels);
+                return pixels;
             }
-            pixels.push(1);
+            pixels++;
         }
     }
 

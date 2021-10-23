@@ -44,8 +44,15 @@ class Tileset extends Definable {
         if (this.tiledTileset !== null) {
             const properties: TiledTilesetTileProperty[] | undefined = this.tiledTileset.tiles[tileID].properties;
             if (typeof properties !== "undefined") {
-                const matched: TiledTilesetTileProperty | undefined = properties.find((property: TiledTilesetTileProperty): boolean => property.name === "transport");
-                if (typeof matched !== "undefined" && typeof matched.value === "string" && matched.value.length > 0) {
+                let matched: TiledTilesetTileProperty | null = null;
+                for (let iE: number = properties.length - 1; iE >= 0; iE--) {
+                    const property: TiledTilesetTileProperty = properties[iE];
+                    if (property.name === "transport") {
+                        matched = property;
+                        break;
+                    }
+                }
+                if (matched !== null && typeof matched.value === "string" && matched.value.length > 0) {
                     const transports: Map<string, Definable> | undefined = definables.get("Transport");
                     if (typeof transports !== "undefined") {
                         const transport: Definable | undefined = transports.get(matched.value);
