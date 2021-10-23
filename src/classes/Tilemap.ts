@@ -38,7 +38,7 @@ class Tilemap extends Definable implements Renderable {
                     case "transports":
                         if (typeof layer.chunks !== "undefined") {
                             for (const chunk of layer.chunks) {
-                                if (rectanglesOverlap(x - 1, y - 1, width + 2, height + 2, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                if (rectanglesOverlap(x, y, width, height, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
                                     let key: number = 0;
                                     for (const datum of chunk.data) {
                                         const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
@@ -77,7 +77,7 @@ class Tilemap extends Definable implements Renderable {
                             for (const innerLayer of layer.layers) {
                                 if (innerLayer.name !== "bg" && typeof innerLayer.chunks !== "undefined") {
                                     for (const chunk of innerLayer.chunks) {
-                                        if (rectanglesOverlap(x - 1, y - 1, width + 2, height + 2, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                        if (rectanglesOverlap(x, y, width, height, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
                                             let key: number = 0;
                                             for (const datum of chunk.data) {
                                                 const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
