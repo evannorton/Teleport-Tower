@@ -38,24 +38,26 @@ class Tilemap extends Definable implements Renderable {
                     case "transports":
                         if (typeof layer.chunks !== "undefined") {
                             for (const chunk of layer.chunks) {
-                                let key: number = 0;
-                                for (const datum of chunk.data) {
-                                    const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
-                                    if (typeof tiledTileset !== "undefined") {
-                                        const tileID: number = datum - tiledTileset.firstgid;
-                                        const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
-                                        if (typeof tilesets !== "undefined") {
-                                            const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
-                                            if (tileset instanceof Tileset) {
-                                                const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
-                                                const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
-                                                if (rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
-                                                    return tileset.getTransportAtTile(tileID);
+                                if (rectanglesOverlap(x - 1, y - 1, width + 2, height + 2, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                    let key: number = 0;
+                                    for (const datum of chunk.data) {
+                                        const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
+                                        if (typeof tiledTileset !== "undefined") {
+                                            const tileID: number = datum - tiledTileset.firstgid;
+                                            const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
+                                            if (typeof tilesets !== "undefined") {
+                                                const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
+                                                if (tileset instanceof Tileset) {
+                                                    const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
+                                                    const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                    if (rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
+                                                        return tileset.getTransportAtTile(tileID);
+                                                    }
                                                 }
                                             }
                                         }
+                                        key++;
                                     }
-                                    key++;
                                 }
                             }
                         }
@@ -75,24 +77,26 @@ class Tilemap extends Definable implements Renderable {
                             for (const innerLayer of layer.layers) {
                                 if (typeof innerLayer.chunks !== "undefined") {
                                     for (const chunk of innerLayer.chunks) {
-                                        let key: number = 0;
-                                        for (const datum of chunk.data) {
-                                            const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
-                                            if (typeof tiledTileset !== "undefined") {
-                                                const tileID: number = datum - tiledTileset.firstgid;
-                                                const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
-                                                if (typeof tilesets !== "undefined") {
-                                                    const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
-                                                    if (tileset instanceof Tileset) {
-                                                        const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
-                                                        const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
-                                                        if (tileset.hasCollisionAtTile(tileID) && rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
-                                                            return true;
+                                        if (rectanglesOverlap(x - 1, y - 1, width + 2, height + 2, chunk.x * 16, chunk.y * 16, chunk.width * 16, chunk.height * 16)) {
+                                            let key: number = 0;
+                                            for (const datum of chunk.data) {
+                                                const tiledTileset: TiledTilemapTileset | undefined = [...this.tiledTilemap.tilesets].reverse().find((tileset: TiledTilemapTileset): boolean => tileset.firstgid <= datum);
+                                                if (typeof tiledTileset !== "undefined") {
+                                                    const tileID: number = datum - tiledTileset.firstgid;
+                                                    const tilesets: Map<string, Definable> | undefined = definables.get("Tileset");
+                                                    if (typeof tilesets !== "undefined") {
+                                                        const tileset: Definable | undefined = tilesets.get(tiledTileset.source.substring(12, tiledTileset.source.lastIndexOf(".json")));
+                                                        if (tileset instanceof Tileset) {
+                                                            const tileX: number = (chunk.x + key % chunk.width) * tileWidth;
+                                                            const tileY: number = (chunk.y + Math.floor(key / chunk.width)) * tileHeight;
+                                                            if (tileset.hasCollisionAtTile(tileID) && rectanglesOverlap(tileX, tileY, tileWidth, tileHeight, x, y, width, height)) {
+                                                                return true;
+                                                            }
                                                         }
                                                     }
                                                 }
+                                                key++;
                                             }
-                                            key++;
                                         }
                                     }
                                 }
