@@ -148,7 +148,8 @@ class Player extends Definable implements Renderable, Updatable {
         if (this.projectile !== null) {
             this.x = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
             this.y = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
-            this.movementVelocity = 0;
+            this.movementVelocity = this.projectile.getXVelocity();
+            this.direction = this.projectile.getXDirection();
             this.fallVelocity = baseFallVelocity;
             this.projectile = null;
             this.transport();
@@ -194,7 +195,13 @@ class Player extends Definable implements Renderable, Updatable {
             }
             switch (this.direction) {
                 case "left":
-                    if (this.hasCollisionOnLeft() === false) {
+                    if (this.hasCollisionOnLeft()) {
+                        if (this.hasCollisionOnBottom() === false) {
+                            this.direction = "right";
+                            this.movementVelocity /= 2;
+                        }
+                    }
+                    else {
                         const moved: number = this.getLeftMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                         if (moved > 0) {
                             if (state.mouseHeldAt !== null) {
@@ -207,7 +214,13 @@ class Player extends Definable implements Renderable, Updatable {
                     }
                     break;
                 case "right":
-                    if (this.hasCollisionOnRight() === false) {
+                    if (this.hasCollisionOnRight()) {
+                        if (this.hasCollisionOnBottom() === false) {
+                            this.direction = "left";
+                            this.movementVelocity /= 2;
+                        }
+                    }
+                    else {
                         const moved: number = this.getRightMovableWidth() * (this.hasCollisionOnBottom() ? 1 : 0.5);
                         if (moved > 0) {
                             if (state.mouseHeldAt !== null) {

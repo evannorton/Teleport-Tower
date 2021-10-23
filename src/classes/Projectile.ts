@@ -47,6 +47,18 @@ class Projectile extends Definable implements Renderable, Updatable {
         return this.x;
     }
 
+    public getXDirection(): "left" | "right" {
+        return this.xDirection;
+    }
+
+    public getXVelocity(): number {
+        return this.xVelocity;
+    }
+
+    public getYVelocity(): number {
+        return this.yVelocity;
+    }
+
     public getY(): number {
         return this.y;
     }
