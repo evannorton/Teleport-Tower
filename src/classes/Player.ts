@@ -256,6 +256,9 @@ class Player extends Definable implements Renderable, Updatable {
         }
         else {
             this.blink();
+            if (state.mouseHeldAt !== null) {
+                state.mouseHeldAt = state.now;
+            }
         }
     }
 
