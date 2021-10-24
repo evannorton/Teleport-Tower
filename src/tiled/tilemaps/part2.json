@@ -1,5 +1,5 @@
 { "compressionlevel":-1,
- "height":96,
+ "height":88,
  "infinite":true,
  "layers":[
         {
@@ -300,5 +300,5 @@
  "tilewidth":16,
  "type":"map",
  "version":"1.6",
- "width":30
+ "width":32
 }
