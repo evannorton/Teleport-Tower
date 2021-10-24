@@ -121,7 +121,7 @@ class Player extends Definable implements Renderable, Updatable {
                     const sourceY: number = Math.floor(frame / 8) * 25;
                     const x: number = (this.isAimingLeft() ? this.x + this.width + 0 : this.x - 25 - 0) - getCameraX();
                     const y: number = this.y - 25 + 12 - getCameraY();
-                    drawImage(meter, sourceX, sourceY, 25, 25, Math.min(Math.max(x, 2), screenWidth - 27), y, 25, 25, 8);
+                    drawImage(meter, sourceX, sourceY, 25, 25, Math.min(Math.max(x, 1), screenWidth - 26), y, 25, 25, 8);
                 }
             }
         }
