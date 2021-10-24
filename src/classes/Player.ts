@@ -20,6 +20,7 @@ import minProjectilePower from "../constants/minProjectilePower";
 import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import projectileChargeLength from "../constants/projectileChargeLength";
+import screenWidth from "../constants/screenWidth";
 import state from "../state";
 import walkSpeed from "../constants/walkSpeed";
 
@@ -118,7 +119,9 @@ class Player extends Definable implements Renderable, Updatable {
                     const frame: number = Math.min(49, Math.floor(diff / totalLength * 50));
                     const sourceX: number = frame % 8 * 25;
                     const sourceY: number = Math.floor(frame / 8) * 25;
-                    drawImage(meter, sourceX, sourceY, 25, 25, (this.isAimingLeft() ? this.x + this.width + 0 : this.x - 25 - 0) - getCameraX(), this.y - 25 + 12 - getCameraY(), 25, 25, 8);
+                    const x: number = (this.isAimingLeft() ? this.x + this.width + 0 : this.x - 25 - 0) - getCameraX();
+                    const y: number = this.y - 25 + 12 - getCameraY();
+                    drawImage(meter, sourceX, sourceY, 25, 25, Math.min(Math.max(x, 2), screenWidth - 27), y, 25, 25, 8);
                 }
             }
         }
