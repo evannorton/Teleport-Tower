@@ -5,6 +5,7 @@ class AudioSource extends Definable {
     private fadingIn: boolean = false;
     private fadingOut: boolean = false;
     private loopPoint: number | null = null;
+    private muted: boolean = false;
     private onPlay: (() => void) | null = null;
     private plays: number = 0;
     private readonly howl: Howl;
@@ -48,6 +49,20 @@ class AudioSource extends Definable {
         this.howl.fade(this.howl.volume(), 0, duration);
     }
 
+    public toggleMute(): void {
+        if (this.muted) {
+            this.unmute();
+        }
+        else {
+            this.mute();
+        }
+    }
+
+    private mute(): void {
+        this.muted = true;
+        this.howl.mute(true);
+    }
+
     private onHowlFade(): void {
         if (this.fadingIn) {
             this.fadingIn = false;
@@ -63,6 +78,11 @@ class AudioSource extends Definable {
             this.onPlay();
         }
         this.plays++;
+    }
+
+    private unmute(): void {
+        this.muted = false;
+        this.howl.mute(false);
     }
 }
 

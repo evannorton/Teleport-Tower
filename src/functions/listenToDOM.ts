@@ -1,3 +1,6 @@
+import AudioSource from "../classes/AudioSource";
+import Definable from "../classes/Definable";
+import definables from "../maps/definables";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
@@ -18,6 +21,17 @@ const listenToDOM = (): void => {
         state.app.renderer.view.addEventListener("keydown", (e: KeyboardEvent): void => {
             const key: string = e.key.toLowerCase();
             switch (key) {
+                case "m": {
+                    const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+                    if (typeof audio !== "undefined") {
+                        audio.forEach((source: Definable): void => {
+                            if (source instanceof AudioSource) {
+                                source.toggleMute();
+                            }
+                        });
+                    }
+                    break;
+                }
                 case "tab":
                     e.preventDefault();
                     break;
