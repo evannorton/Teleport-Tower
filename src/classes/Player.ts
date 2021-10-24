@@ -11,7 +11,6 @@ import blinkDuration from "../constants/blinkDuration";
 import blinkInterval from "../constants/blinkInterval";
 import definables from "../maps/definables";
 import drawImage from "../functions/draw/drawImage";
-import drawRectangle from "../functions/draw/drawRectangle";
 import fallAcceleration from "../constants/fallAcceleration";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
@@ -21,7 +20,6 @@ import minProjectilePower from "../constants/minProjectilePower";
 import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import projectileChargeLength from "../constants/projectileChargeLength";
-import screenHeight from "../constants/screenHeight";
 import state from "../state";
 import walkSpeed from "../constants/walkSpeed";
 
@@ -111,15 +109,16 @@ class Player extends Definable implements Renderable, Updatable {
                     drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
                 }
             }
-            if (state.mouseHeldAt !== null) {
-                const timeHeld: number = state.now - state.mouseHeldAt;
-                const percent: number = Math.min(timeHeld / projectileChargeLength, 1);
-                const offset: number = 4;
-                const width: number = 80;
-                const height: number = 24;
-                if (this.hasCollisionOnBottom() && this.projectile === null) {
-                    drawRectangle("#343434", offset, screenHeight - offset - height, width, height, 6);
-                    drawRectangle("#e03c28", offset, screenHeight - offset - height, percent * width, height, 6);
+            if (state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
+                const meter: Definable | undefined = imageSources?.get("meter");
+                if (meter instanceof ImageSource) {
+                    const diff: number = state.now - state.mouseHeldAt;
+                    const frameDuration: number = projectileChargeLength / 50;
+                    const totalLength: number = frameDuration * 50;
+                    const frame: number = Math.min(49, Math.floor(diff / totalLength * 50));
+                    const sourceX: number = frame % 8 * 25;
+                    const sourceY: number = Math.floor(frame / 8) * 25;
+                    drawImage(meter, sourceX, sourceY, 25, 25, (this.isAimingLeft() ? this.x + this.width + 0 : this.x - 25 - 0) - getCameraX(), this.y - 25 + 12 - getCameraY(), 25, 25, 8);
                 }
             }
         }
