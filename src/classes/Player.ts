@@ -87,14 +87,17 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public playChargeSFX(): void {
-        if (state.cutscene === null && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
-            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
-            if (typeof audio !== "undefined") {
-                const charge: Definable | undefined = audio.get("sfx/charge");
-                if (charge instanceof AudioSource) {
+        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        if (typeof audio !== "undefined") {
+            const charge: Definable | undefined = audio.get("sfx/charge");
+            if (charge instanceof AudioSource) {
+                if (state.cutscene === null && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
                     if (charge.isPlaying() === false) {
                         charge.play(null, null);
                     }
+                }
+                else if (charge.isPlaying()) {
+                    charge.stop();
                 }
             }
         }
