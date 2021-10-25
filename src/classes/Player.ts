@@ -31,6 +31,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly collisionRightOffset: number = 8;
     private direction: "left" | "right" = "left";
     private fallVelocity: number = baseFallVelocity;
+    private fellAt: number | null = null;
     private readonly height: number = 32;
     private map: string = "part1";
     private movementVelocity: number = 0;
@@ -98,6 +99,20 @@ class Player extends Definable implements Renderable, Updatable {
                 }
                 else if (charge.isPlaying()) {
                     charge.stop();
+                }
+            }
+        }
+    }
+
+    public playFallSFX(): void {
+        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        if (typeof audio !== "undefined") {
+            const fall: Definable | undefined = audio.get("sfx/fall");
+            if (fall instanceof AudioSource) {
+                if (this.hasCollisionOnBottom() && this.fellAt !== null && state.now - this.fellAt > 1000) {
+                    if (fall.isPlaying() === false) {
+                        fall.play(null, null);
+                    }
                 }
             }
         }
@@ -253,6 +268,9 @@ class Player extends Definable implements Renderable, Updatable {
                     }
                     this.blink();
                     this.y += moved;
+                    if (this.fellAt === null) {
+                        this.fellAt = state.now;
+                    }
                     this.transport();
                 }
                 if (this.fallVelocity < maxFallVelocity) {
@@ -283,6 +301,10 @@ class Player extends Definable implements Renderable, Updatable {
             });
         }
         this.playChargeSFX();
+        this.playFallSFX();
+        if (this.hasCollisionOnBottom()) {
+            this.fellAt = null;
+        }
     }
 
     private getFallableHeight(): number {
