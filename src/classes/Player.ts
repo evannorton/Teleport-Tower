@@ -104,6 +104,24 @@ class Player extends Definable implements Renderable, Updatable {
         }
     }
 
+    public playDrumsSFX(): void {
+        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        if (typeof audio !== "undefined") {
+            const drums: Definable | undefined = audio.get("sfx/drums");
+            if (drums instanceof AudioSource) {
+                if (this.hasCollisionOnBottom() === false && this.fellAt !== null && state.now - this.fellAt > 1000) {
+                    if (drums.isPlaying() === false) {
+                        drums.play(null, null);
+                        drums.fadeIn(1000);
+                    }
+                }
+                else if (drums.isPlaying()) {
+                    drums.stop();
+                }
+            }
+        }
+    }
+
     public playFallSFX(): void {
         const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
         if (typeof audio !== "undefined") {
@@ -301,6 +319,7 @@ class Player extends Definable implements Renderable, Updatable {
             });
         }
         this.playChargeSFX();
+        this.playDrumsSFX();
         this.playFallSFX();
         if (this.hasCollisionOnBottom()) {
             this.fellAt = null;

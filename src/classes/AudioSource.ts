@@ -30,9 +30,14 @@ class AudioSource extends Definable {
         });
     }
 
+    public fadeIn(duration: number): void {
+        this.fadingIn = true;
+        this.howl.fade(0, 1, duration);
+    }
+
     public fadeOut(duration: number): void {
         this.fadingOut = true;
-        this.howl.fade(this.howl.volume(), 0, duration);
+        this.howl.fade(1, 0, duration);
     }
 
     public getSRC(): string {
