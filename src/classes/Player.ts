@@ -37,7 +37,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly width: number = 32;
     private walkedAt: number | null = null;
     private x: number = 180;
-    private y: number = 816;
+    private y: number = 152 * 16;
     public constructor() {
         super(nanoid());
     }
