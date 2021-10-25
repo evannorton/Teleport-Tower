@@ -91,6 +91,23 @@ class Player extends Definable implements Renderable, Updatable {
         return this.map === map;
     }
 
+    public playAmbientSFX(): void {
+        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        if (typeof audio !== "undefined") {
+            const outside: Definable | undefined = audio.get("sfx/outside");
+            if (outside instanceof AudioSource) {
+                if (state.cutscene === null && this.map === "part1") {
+                    if (outside.isPlaying() === false) {
+                        outside.play(0, null);
+                    }
+                }
+                else if (outside.isPlaying()) {
+                    outside.stop();
+                }
+            }
+        }
+    }
+
     public playChargeSFX(): void {
         const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
         if (typeof audio !== "undefined") {
@@ -335,6 +352,7 @@ class Player extends Definable implements Renderable, Updatable {
         this.playChargeSFX();
         this.playDrumsSFX();
         this.playFallSFX();
+        this.playAmbientSFX();
         if (this.hasCollisionOnBottom()) {
             this.fellAt = null;
         }
