@@ -4,24 +4,34 @@ import TiledTileset from "../interfaces/tiled/TiledTileset";
 import TiledTilesetTileProperty from "../interfaces/tiled/TiledTilesetTileProperty";
 import Transport from "./Transport";
 import definables from "../maps/definables";
+import state from "../state";
 import tileWidth from "../constants/tileWidth";
 import tilesets from "../maps/tilesets";
 
 class Tileset extends Definable {
-    private readonly image: ImageSource;
+    private readonly images: ImageSource[] = [];
+    private readonly maxY: number;
     private readonly tiledTileset: TiledTileset | null = null;
-
-    public constructor(slug: string) {
+    public constructor(slug: string, variants: number, maxY: number) {
         super(slug);
-        this.image = new ImageSource(`tilesheets/${this.slug}`);
         const tileset: TiledTileset | undefined = tilesets.get(slug);
         if (typeof tileset !== "undefined") {
             this.tiledTileset = tileset;
         }
+        for (let i: number = 0; i < variants; i++) {
+            this.images.push(new ImageSource(`tilesheets/${this.slug}/${i + 1}`));
+        }
+        this.maxY = maxY;
     }
 
     public getImage(): ImageSource {
-        return this.image;
+        if (state.player !== null) {
+            const y: number = state.player.getY();
+            const percent: number = y / this.maxY;
+            const index: number = Math.max(Math.min(Math.floor(this.images.length * percent), this.images.length - 1), 0);
+            return [...this.images].reverse()[index];
+        }
+        return this.images[0];
     }
 
     public getTileX(tileID: number): number | null {
