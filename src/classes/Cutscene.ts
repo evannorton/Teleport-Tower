@@ -3,6 +3,7 @@ import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
 import Updatable from "../interfaces/Updatable";
 import drawImage from "../functions/draw/drawImage";
+import links from "../elements/links";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
@@ -42,6 +43,9 @@ class Cutscene extends Definable implements Renderable, Updatable {
             if (diff > totalLength) {
                 this.startedAt = null;
                 state.cutscene = null;
+                if (links !== null) {
+                    links.classList.add("hidden");
+                }
             }
         }
     }
