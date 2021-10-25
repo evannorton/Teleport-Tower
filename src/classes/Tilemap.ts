@@ -1,5 +1,4 @@
 import Definable from "./Definable";
-import Music from "./Music";
 import Renderable from "../interfaces/Renderable";
 import TiledTilemap from "../interfaces/tiled/TiledTilemap";
 import TiledTilemapLayer from "../interfaces/tiled/TiledTilemapLayer";
@@ -20,12 +19,10 @@ import tileWidth from "../constants/tileWidth";
 import tilemaps from "../maps/tilemaps";
 
 class Tilemap extends Definable implements Renderable {
-    private readonly music: Music;
     private readonly tiledTilemap: TiledTilemap | null = null;
 
-    public constructor(slug: string, music: Music) {
+    public constructor(slug: string) {
         super(slug);
-        this.music = music;
         const tilemap: TiledTilemap | undefined = tilemaps.get(slug);
         if (typeof tilemap !== "undefined") {
             this.tiledTilemap = tilemap;
@@ -133,10 +130,6 @@ class Tilemap extends Definable implements Renderable {
             }
         }
         return false;
-    }
-
-    public playMusic(): void {
-        this.music.play();
     }
 
     public render(): void {

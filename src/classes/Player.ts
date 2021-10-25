@@ -87,17 +87,17 @@ class Player extends Definable implements Renderable, Updatable {
 
     public playMusic(): void {
         const music: Map<string, Definable> | undefined = definables.get("Music");
-        const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
-        if (typeof music !== "undefined" && typeof tilemaps !== "undefined") {
+        if (typeof music !== "undefined") {
             music.forEach((track: Definable | undefined): void => {
                 if (track instanceof Music) {
-                    track.stop();
+                    if (track.getMap() === this.map) {
+                        track.play();
+                    }
+                    else {
+                        track.stop();
+                    }
                 }
             });
-            const tilemap: Definable | undefined = tilemaps.get(this.map);
-            if (tilemap instanceof Tilemap) {
-                tilemap.playMusic();
-            }
         }
     }
 

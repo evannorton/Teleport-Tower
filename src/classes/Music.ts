@@ -2,20 +2,30 @@ import AudioSource from "./AudioSource";
 import Definable from "./Definable";
 
 class Music extends Definable {
-    private readonly audio: AudioSource;
+    private readonly audio: AudioSource[] = [];
     private readonly loopPoint: number;
-    public constructor(slug: string, loopPoint: number) {
+    private readonly map: string;
+    public constructor(slug: string, layers: number, loopPoint: number, map: string) {
         super(slug);
-        this.audio = new AudioSource(`music/${slug}`);
+        for (let i: number = 0; i < layers; i++) {
+            this.audio.push(new AudioSource(`music/${slug}/${i + 1}`));
+        }
         this.loopPoint = loopPoint;
+        this.map = map;
+    }
+
+    public getMap(): string {
+        return this.map;
     }
 
     public play(): void {
-        this.audio.play(this.loopPoint, null);
+        this.audio[0].play(this.loopPoint, null);
     }
 
     public stop(): void {
-        this.audio.stop();
+        this.audio.forEach((audio: AudioSource): void => {
+            audio.stop();
+        });
     }
 }
 
