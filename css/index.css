@@ -28,4 +28,42 @@ body {
 
 #screen {
     cursor: url(../images/cursor.png), default;
+    position: relative;
+}
+
+.link {
+    cursor: url(../images/cursor-pointer.png) 7 2, pointer;
+    position: absolute;
+}
+
+.link.hidden {
+    display: none;
+}
+
+#bampikku-link {
+    height: 5%;
+    margin-left: 28%;
+    margin-top: 27%;
+    width: 12%;
+}
+
+#thlurp-link {
+    height: 4%;
+    margin-left: 29%;
+    margin-top: 30.5%;
+    width: 10%;
+}
+
+#retrommo-link {
+    height: 5%;
+    margin-left: 43.5%;
+    margin-top: 27%;
+    width: 13%;
+}
+
+#ragchomp-link {
+    height: 5%;
+    margin-left: 61%;
+    margin-top: 27%;
+    width: 13%;
 }
