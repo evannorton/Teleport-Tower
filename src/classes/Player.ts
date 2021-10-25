@@ -27,6 +27,7 @@ import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
     private blinkedAt: number = state.now;
+    private chargePlayed: boolean = false;
     private readonly collisionLeftOffset: number = 8;
     private readonly collisionRightOffset: number = 8;
     private direction: "left" | "right" = "left";
@@ -114,13 +115,11 @@ class Player extends Definable implements Renderable, Updatable {
         if (typeof audio !== "undefined") {
             const charge: Definable | undefined = audio.get("sfx/charge");
             if (charge instanceof AudioSource) {
-                if (state.cutscene === null && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
+                if (state.cutscene === null && this.chargePlayed === false && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
                     if (charge.isPlaying() === false) {
                         charge.play(null, null);
+                        this.chargePlayed = true;
                     }
-                }
-                else if (charge.isPlaying()) {
-                    charge.stop();
                 }
             }
         }
@@ -232,6 +231,7 @@ class Player extends Definable implements Renderable, Updatable {
             this.projectile = null;
             this.transport();
             this.preteleporting = false;
+            this.chargePlayed = false;
         }
     }
 
