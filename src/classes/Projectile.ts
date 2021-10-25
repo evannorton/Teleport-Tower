@@ -1,10 +1,11 @@
 import Definable from "./Definable";
+import ImageSource from "./ImageSource";
 import Player from "./Player";
 import Renderable from "../interfaces/Renderable";
 import Tilemap from "./Tilemap";
 import Updatable from "../interfaces/Updatable";
 import definables from "../maps/definables";
-import drawRectangle from "../functions/draw/drawRectangle";
+import drawImage from "../functions/draw/drawImage";
 import getCameraX from "../functions/getCameraX";
 import getCameraY from "../functions/getCameraY";
 import { nanoid } from "nanoid";
@@ -13,10 +14,12 @@ import screenWidth from "../constants/screenWidth";
 import state from "../state";
 
 class Projectile extends Definable implements Renderable, Updatable {
-    private readonly height: number = 4;
+    private readonly collisionLeftOffset: number = 2;
+    private readonly collisionRightOffset: number = 2;
+    private readonly height: number = 7;
     private readonly player: Player;
     private readonly spawnedAt: number = state.now;
-    private readonly width: number = 4;
+    private readonly width: number = 7;
     private x: number;
     private y: number;
     private xDirection: "left" | "right";
@@ -68,7 +71,13 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     public render(): void {
-        drawRectangle("#ffffff", this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
+        const images: Map<string, Definable> | undefined = definables.get("ImageSource");
+        if (typeof images !== "undefined") {
+            const image: Definable | undefined = images.get("projectile");
+            if (image instanceof ImageSource) {
+                drawImage(image, 0, 0, this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
+            }
+        }
     }
 
     public update(): void {
@@ -127,7 +136,7 @@ class Projectile extends Definable implements Renderable, Updatable {
             if (y >= sinceUpdate * this.yVelocity / 1000) {
                 return sinceUpdate * this.yVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y + this.height + y), this.width - 2, 0)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset + 1), Math.round(this.y + this.height + y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0)) {
                 return pixels;
             }
             pixels++;
@@ -141,7 +150,7 @@ class Projectile extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.xVelocity / 1000) {
                 return sinceUpdate * this.xVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x - x), Math.round(this.y + 1), 0, this.height - 2)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset - x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return pixels;
             }
             pixels++;
@@ -155,7 +164,7 @@ class Projectile extends Definable implements Renderable, Updatable {
             if (x >= sinceUpdate * this.xVelocity / 1000) {
                 return sinceUpdate * this.xVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + this.width + x), Math.round(this.y + 1), 0, this.height - 2)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset + x), Math.round(this.y + 1), 0, this.height - 2)) {
                 return pixels;
             }
             pixels++;
@@ -169,7 +178,7 @@ class Projectile extends Definable implements Renderable, Updatable {
             if (y >= sinceUpdate * this.yVelocity / 1000) {
                 return sinceUpdate * this.yVelocity / 1000;
             }
-            if (this.hasCollisionInRectangle(Math.round(this.x + 1), Math.round(this.y - y), this.width - 2, 0)) {
+            if (this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset + 1), Math.round(this.y - y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0)) {
                 return pixels;
             }
             pixels++;
@@ -188,19 +197,19 @@ class Projectile extends Definable implements Renderable, Updatable {
     }
 
     private hasCollisionOnBottom(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x) + 1, Math.round(this.y + this.height), this.width - 2, 0);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset) + 1, Math.round(this.y + this.height), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0);
     }
 
     private hasCollisionOnLeft(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x), Math.round(this.y + 1), 0, this.height - 2);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset), Math.round(this.y + 1), 0, this.height - 2);
     }
 
     private hasCollisionOnRight(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x + this.width), Math.round(this.y + 1), 0, this.height - 2);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.width - this.collisionRightOffset), Math.round(this.y + 1), 0, this.height - 2);
     }
 
     private hasCollisionOnTop(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x) + 1, Math.round(this.y), this.width - 2, 0);
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset) + 1, Math.round(this.y), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0);
     }
 }
 
