@@ -18,7 +18,7 @@ class AudioSource extends Definable {
         });
         this.howl.on("end", (): void => {
             if (this.loopPoint !== null) {
-                this.howl.seek(this.loopPoint);
+                this.seek(this.loopPoint);
                 this.play(this.loopPoint, this.onPlay);
             }
         });
@@ -30,8 +30,21 @@ class AudioSource extends Definable {
         });
     }
 
+    public fadeOut(duration: number): void {
+        this.fadingOut = true;
+        this.howl.fade(this.howl.volume(), 0, duration);
+    }
+
     public getSRC(): string {
         return `./audio/${this.slug}.mp3`;
+    }
+
+    public getTime(): number {
+        return this.howl.seek();
+    }
+
+    public isPlaying(): boolean {
+        return this.howl.playing();
     }
 
     public play(loopPoint: number | null, onPlay: (() => void) | null): void {
@@ -40,13 +53,12 @@ class AudioSource extends Definable {
         this.howl.play();
     }
 
-    public stop(): void {
-        this.howl.stop();
+    public seek(time: number): void {
+        this.howl.seek(time);
     }
 
-    public fadeOut(duration: number): void {
-        this.fadingOut = true;
-        this.howl.fade(this.howl.volume(), 0, duration);
+    public stop(): void {
+        this.howl.stop();
     }
 
     public toggleMute(): void {

@@ -85,22 +85,6 @@ class Player extends Definable implements Renderable, Updatable {
         return this.map === map;
     }
 
-    public playMusic(): void {
-        const music: Map<string, Definable> | undefined = definables.get("Music");
-        if (typeof music !== "undefined") {
-            music.forEach((track: Definable | undefined): void => {
-                if (track instanceof Music) {
-                    if (track.getMap() === this.map) {
-                        track.play();
-                    }
-                    else {
-                        track.stop();
-                    }
-                }
-            });
-        }
-    }
-
     public render(): void {
         if (state.cutscene === null) {
             const imageSources: Map<string, Definable> | undefined = definables.get("ImageSource");
@@ -261,6 +245,19 @@ class Player extends Definable implements Renderable, Updatable {
             if (state.mouseHeldAt !== null) {
                 state.mouseHeldAt = state.now;
             }
+        }
+        const music: Map<string, Definable> | undefined = definables.get("Music");
+        if (typeof music !== "undefined") {
+            music.forEach((track: Definable): void => {
+                if (track instanceof Music) {
+                    if (track.getMap() === this.map && track.hasBounds(this.y)) {
+                        track.play(this.y);
+                    }
+                    else {
+                        track.stop();
+                    }
+                }
+            });
         }
     }
 
@@ -428,7 +425,6 @@ class Player extends Definable implements Renderable, Updatable {
                 this.projectile.remove();
                 this.projectile = null;
             }
-            this.playMusic();
         }
     }
 }

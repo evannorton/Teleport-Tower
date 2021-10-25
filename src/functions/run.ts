@@ -33,7 +33,6 @@ const run = (): void => {
     state.player = new Player;
     state.app.ticker.add(tick);
     focusScreen();
-    state.player.playMusic();
 };
 
 export default run;
