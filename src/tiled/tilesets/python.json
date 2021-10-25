@@ -1,0 +1,24 @@
+{ "columns":1,
+ "image":"..\/..\/..\/images\/tilesheets\/python.png",
+ "imageheight":16,
+ "imagewidth":16,
+ "margin":0,
+ "name":"python",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.7.2",
+ "tileheight":16,
+ "tiles":[
+        {
+         "id":0,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":false
+                }]
+        }],
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.6"
+}
