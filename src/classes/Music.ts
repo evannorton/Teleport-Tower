@@ -1,7 +1,9 @@
 import AudioSource from "./AudioSource";
 import Definable from "./Definable";
+import Updatable from "../interfaces/Updatable";
+import state from "../state";
 
-class Music extends Definable {
+class Music extends Definable implements Updatable {
     private readonly audio: AudioSource[] = [];
     private readonly loopPoint: number;
     private readonly map: string;
@@ -49,6 +51,20 @@ class Music extends Definable {
                 audio.stop();
             }
         });
+    }
+
+    public update(): void {
+        const fellAt: number | null = state.player === null ? null : state.player.getFellAt();
+        if (state.player !== null && state.player.hasCollisionOnBottom() === false && fellAt !== null && state.now - fellAt > 1000) {
+            this.audio.forEach((audio: AudioSource): void => {
+                audio.setVolume(0.5);
+            });
+        }
+        else {
+            this.audio.forEach((audio: AudioSource): void => {
+                audio.setVolume(0.7);
+            });
+        }
     }
 }
 

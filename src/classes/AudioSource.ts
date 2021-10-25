@@ -31,9 +31,9 @@ class AudioSource extends Definable {
         });
     }
 
-    public fadeIn(duration: number): void {
+    public fadeIn(duration: number, max: number): void {
         this.fadingIn = true;
-        this.howl.fade(0, 1, duration);
+        this.howl.fade(0, max, duration);
     }
 
     public fadeOut(duration: number): void {
@@ -47,6 +47,10 @@ class AudioSource extends Definable {
 
     public getTime(): number {
         return this.howl.seek();
+    }
+
+    public getVolume(): number {
+        return this.howl.volume();
     }
 
     public isPlaying(): boolean {

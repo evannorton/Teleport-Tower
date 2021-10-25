@@ -67,6 +67,10 @@ class Player extends Definable implements Renderable, Updatable {
         this.projectile = null;
     }
 
+    public getFellAt(): number | null {
+        return this.fellAt;
+    }
+
     public getHeight(): number {
         return this.height;
     }
@@ -112,7 +116,7 @@ class Player extends Definable implements Renderable, Updatable {
                 if (this.hasCollisionOnBottom() === false && this.fellAt !== null && state.now - this.fellAt > 1000) {
                     if (drums.isPlaying() === false) {
                         drums.play(null, null);
-                        drums.fadeIn(1000);
+                        drums.fadeIn(1000, 0.7);
                     }
                 }
                 else if (drums.isPlaying()) {
@@ -125,11 +129,17 @@ class Player extends Definable implements Renderable, Updatable {
     public playFallSFX(): void {
         const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
         if (typeof audio !== "undefined") {
+            const crash: Definable | undefined = audio.get("sfx/crash");
+            const drums: Definable | undefined = audio.get("sfx/drums");
             const fall: Definable | undefined = audio.get("sfx/fall");
-            if (fall instanceof AudioSource) {
+            if (crash instanceof AudioSource && drums instanceof AudioSource && fall instanceof AudioSource) {
                 if (this.hasCollisionOnBottom() && this.fellAt !== null && state.now - this.fellAt > 1000) {
                     if (fall.isPlaying() === false) {
                         fall.play(null, null);
+                    }
+                    if (crash.isPlaying() === false) {
+                        crash.setVolume(drums.getVolume());
+                        crash.play(null, null);
                     }
                 }
             }
@@ -196,6 +206,10 @@ class Player extends Definable implements Renderable, Updatable {
             this.projectile = null;
             this.transport();
         }
+    }
+
+    public hasCollisionOnBottom(): boolean {
+        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset) + 1, Math.round(this.y + this.height), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0);
     }
 
     public update(): void {
@@ -452,10 +466,6 @@ class Player extends Definable implements Renderable, Updatable {
             }
         }
         return false;
-    }
-
-    private hasCollisionOnBottom(): boolean {
-        return this.hasCollisionInRectangle(Math.round(this.x + this.collisionLeftOffset) + 1, Math.round(this.y + this.height), this.width - 2 - this.collisionLeftOffset - this.collisionRightOffset, 0);
     }
 
     private hasCollisionOnLeft(): boolean {

@@ -1,11 +1,13 @@
 import Cutscene from "../classes/Cutscene";
 import Definable from "../classes/Definable";
+import Music from "../classes/Music";
 import Player from "../classes/Player";
 import Projectile from "../classes/Projectile";
 import definables from "../maps/definables";
 
 const update = (): void => {
     const cutscenes: Map<string, Definable> | undefined = definables.get("Cutscene");
+    const music: Map<string, Definable> | undefined = definables.get("Music");
     const players: Map<string, Definable> | undefined = definables.get("Player");
     const projectiles: Map<string, Definable> | undefined = definables.get("Projectile");
     if (typeof cutscenes !== "undefined") {
@@ -26,6 +28,13 @@ const update = (): void => {
         projectiles.forEach((projectile: Definable): void => {
             if (projectile instanceof Projectile) {
                 projectile.update();
+            }
+        });
+    }
+    if (typeof music !== "undefined") {
+        music.forEach((track: Definable): void => {
+            if (track instanceof Music) {
+                track.update();
             }
         });
     }
