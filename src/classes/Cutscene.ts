@@ -1,3 +1,4 @@
+import AudioSource from "./AudioSource";
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
@@ -9,6 +10,7 @@ import screenWidth from "../constants/screenWidth";
 import state from "../state";
 
 class Cutscene extends Definable implements Renderable, Updatable {
+    private readonly audio: AudioSource;
     private readonly frames: number;
     private readonly image: ImageSource;
     private startedAt: number | null = null;
@@ -16,6 +18,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
     public constructor(slug: string, frames: number, width: number) {
         super(slug);
         this.image = new ImageSource(`cutscenes/${this.slug}`);
+        this.audio = new AudioSource(`sfx/cutscenes/${this.slug}`, 1);
         this.frames = frames;
         this.width = width;
     }
@@ -35,6 +38,9 @@ class Cutscene extends Definable implements Renderable, Updatable {
     public update(): void {
         if (state.cutscene === this.slug && this.startedAt === null) {
             this.startedAt = state.now;
+            if (this.audio.isPlaying() === false) {
+                this.audio.play(null, null);
+            }
         }
         else if (this.startedAt !== null) {
             const diff: number = state.now - this.startedAt;
