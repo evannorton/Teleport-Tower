@@ -31,17 +31,7 @@ body {
     position: relative;
 }
 
-#links {
-    height: 100%;
-    position: absolute;
-    width: 100%;
-}
-
-#links.hidden {
-    display: none;
-}
-
-#links a {
+.link {
     cursor: url(../images/cursor-pointer.png) 7 2, pointer;
     position: absolute;
 }
