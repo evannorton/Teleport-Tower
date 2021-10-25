@@ -55,10 +55,9 @@ class AudioSource extends Definable {
     public play(loopPoint: number | null, onPlay: (() => void) | null): void {
         this.loopPoint = loopPoint;
         this.onPlay = onPlay;
-        if (this.isPlaying()) {
-            this.howl.stop();
+        if (this.isPlaying() === false) {
+            this.howl.play();
         }
-        this.howl.play();
     }
 
     public seek(time: number): void {
