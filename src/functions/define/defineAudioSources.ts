@@ -7,6 +7,7 @@ const defineAudioSources = (): void => {
     new AudioSource("sfx/drums", 1);
     new AudioSource("sfx/fall", 1);
     new AudioSource("sfx/outside", 1);
+    new AudioSource("sfx/teleport", 1);
 };
 
 export default defineAudioSources;

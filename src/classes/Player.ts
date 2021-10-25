@@ -35,6 +35,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly height: number = 32;
     private map: string = "part1";
     private movementVelocity: number = 0;
+    private preteleporting: boolean = false;
     private projectile: Projectile | null = null;
     private readonly width: number = 32;
     private walkedAt: number | null = null;
@@ -170,6 +171,14 @@ class Player extends Definable implements Renderable, Updatable {
             this.movementVelocity = this.projectile.getXVelocity();
             this.direction = this.projectile.getXDirection();
             this.fallVelocity = baseFallVelocity;
+            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+            if (typeof audio !== "undefined") {
+                const teleport: Definable | undefined = audio.get("sfx/teleport");
+                if (teleport instanceof AudioSource && this.preteleporting === false) {
+                    teleport.play(null, null, true);
+                }
+            }
+            this.preteleporting = true;
         }
     }
 
@@ -222,6 +231,7 @@ class Player extends Definable implements Renderable, Updatable {
         if (this.projectile !== null) {
             this.projectile = null;
             this.transport();
+            this.preteleporting = false;
         }
     }
 
