@@ -9,7 +9,7 @@ const defineTransports = (): void => {
         const part1: Definable | undefined = tilemaps.get("part1");
         const part2: Definable | undefined = tilemaps.get("part2");
         if (part1 instanceof Tilemap && part2 instanceof Tilemap) {
-            new Transport("to-inside", part2, 27 * 16, 129 * 16);
+            new Transport("to-inside", part2, 27 * 16, 150 * 16);
             new Transport("to-outside", part1, 16, 36 * 16);
         }
     }
