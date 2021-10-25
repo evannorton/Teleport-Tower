@@ -3,11 +3,11 @@ import ImageSource from "./ImageSource";
 import Renderable from "../interfaces/Renderable";
 import Updatable from "../interfaces/Updatable";
 import drawImage from "../functions/draw/drawImage";
+import focusScreen from "../functions/focusScreen";
 import links from "../elements/links";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
-import focusScreen from "../functions/focusScreen";
 
 class Cutscene extends Definable implements Renderable, Updatable {
     private readonly frames: number;
