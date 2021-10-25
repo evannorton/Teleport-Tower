@@ -1,3 +1,4 @@
+import AudioSource from "./AudioSource";
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import Music from "./Music";
@@ -83,6 +84,20 @@ class Player extends Definable implements Renderable, Updatable {
 
     public isOnMap(map: string): boolean {
         return this.map === map;
+    }
+
+    public playChargeSFX(): void {
+        if (state.cutscene === null && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
+            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+            if (typeof audio !== "undefined") {
+                const charge: Definable | undefined = audio.get("sfx/charge");
+                if (charge instanceof AudioSource) {
+                    if (charge.isPlaying() === false) {
+                        charge.play(null, null);
+                    }
+                }
+            }
+        }
     }
 
     public preTeleport(): void {
@@ -264,6 +279,7 @@ class Player extends Definable implements Renderable, Updatable {
                 }
             });
         }
+        this.playChargeSFX();
     }
 
     private getFallableHeight(): number {

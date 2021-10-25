@@ -1,3 +1,4 @@
+import defineAudioSources from "./defineAudioSources";
 import defineBackgrounds from "./defineBackgrounds";
 import defineCutscenes from "./defineCutscenes";
 import defineImageSources from "./defineImageSources";
@@ -7,6 +8,7 @@ import defineTilesets from "./defineTilesets";
 import defineTransports from "./defineTransports";
 
 const define = (): void => {
+    defineAudioSources();
     defineImageSources();
     defineMusic();
     defineTilemaps();
