@@ -12,7 +12,7 @@ class Music extends Definable implements Updatable {
     public constructor(slug: string, layers: number, loopPoint: number, map: string, minY: number, maxY: number) {
         super(slug);
         for (let i: number = 0; i < layers; i++) {
-            this.audio.push(new AudioSource(`music/${slug}/${i + 1}`, 0.7));
+            this.audio.push(new AudioSource(`music/${slug}/${i + 1}`, 0.6));
         }
         this.loopPoint = loopPoint;
         this.map = map;
@@ -62,7 +62,7 @@ class Music extends Definable implements Updatable {
         }
         else {
             this.audio.forEach((audio: AudioSource): void => {
-                audio.setVolume(0.7);
+                audio.setVolume(0.6);
             });
         }
     }
