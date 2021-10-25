@@ -44,7 +44,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
                 this.startedAt = null;
                 state.cutscene = null;
                 for (const link of document.getElementsByClassName("link")) {
-                    link.remove();
+                    link.classList.add("hidden");
                 }
                 focusScreen();
             }

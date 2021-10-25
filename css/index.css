@@ -36,6 +36,10 @@ body {
     position: absolute;
 }
 
+.link.hidden {
+    display: none;
+}
+
 #bampikku-link {
     height: 5%;
     margin-left: 28%;
