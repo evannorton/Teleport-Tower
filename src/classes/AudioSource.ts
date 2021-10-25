@@ -57,10 +57,10 @@ class AudioSource extends Definable {
         return this.howl.playing();
     }
 
-    public play(loopPoint: number | null, onPlay: (() => void) | null): void {
+    public play(loopPoint: number | null, onPlay: (() => void) | null, override?: boolean): void {
         this.loopPoint = loopPoint;
         this.onPlay = onPlay;
-        if (this.isPlaying() === false) {
+        if (override === true || this.isPlaying() === false) {
             this.howl.play();
         }
     }

@@ -1,3 +1,4 @@
+import AudioSource from "./AudioSource";
 import Definable from "./Definable";
 import ImageSource from "./ImageSource";
 import Player from "./Player";
@@ -71,6 +72,16 @@ class Projectile extends Definable implements Renderable, Updatable {
         return this.y;
     }
 
+    public playBounce(): void {
+        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        if (typeof audio !== "undefined") {
+            const bounce: Definable | undefined = audio.get("sfx/bounce");
+            if (bounce instanceof AudioSource) {
+                bounce.play(null, null, true);
+            }
+        }
+    }
+
     public remove(): void {
         this.list.delete(this.slug);
     }
@@ -109,6 +120,7 @@ class Projectile extends Definable implements Renderable, Updatable {
                     case "left":
                         if (this.hasCollisionOnLeft()) {
                             this.xDirection = "right";
+                            this.playBounce();
                         }
                         else {
                             this.x -= this.getLeftMovableWidth();
@@ -117,6 +129,7 @@ class Projectile extends Definable implements Renderable, Updatable {
                     case "right":
                         if (this.hasCollisionOnRight()) {
                             this.xDirection = "left";
+                            this.playBounce();
                         }
                         else {
                             this.x += this.getRightMovableWidth();
@@ -127,6 +140,7 @@ class Projectile extends Definable implements Renderable, Updatable {
                     case "up":
                         if (this.hasCollisionOnTop()) {
                             this.yDirection = "down";
+                            this.playBounce();
                         }
                         else {
                             this.y -= this.getTopMovableHeight();
@@ -135,6 +149,7 @@ class Projectile extends Definable implements Renderable, Updatable {
                     case "down":
                         if (this.hasCollisionOnBottom()) {
                             this.yDirection = "up";
+                            this.playBounce();
                         }
                         else {
                             this.y += this.getBottomMovableHeight();

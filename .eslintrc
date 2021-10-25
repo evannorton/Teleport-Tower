@@ -414,14 +414,6 @@
             "error",
             "always"
         ],
-        "class-methods-use-this": [
-            "error",
-            {
-                "exceptMethods": [
-                    "toDefinition"
-                ]
-            }
-        ],
         "comma-dangle": [
             "error",
             "never"
