@@ -38,6 +38,7 @@ class Player extends Definable implements Renderable, Updatable {
     private movementVelocity: number = 0;
     private preteleporting: boolean = false;
     private projectile: Projectile | null = null;
+    private transported: boolean = false;
     private readonly width: number = 32;
     private walkedAt: number | null = null;
     private x: number = 180;
@@ -188,6 +189,12 @@ class Player extends Definable implements Renderable, Updatable {
                 const image: Definable | undefined = imageSources.get("player");
                 if (image instanceof ImageSource) {
                     drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
+                }
+                if (this.transported === false) {
+                    const controlsImage: Definable | undefined = imageSources.get("controls");
+                    if (controlsImage instanceof ImageSource) {
+                        drawImage(controlsImage, 0, 0, 207, 38, screenWidth / 2 - 207 / 2, 32, 207, 38, 2);
+                    }
                 }
             }
             if (state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
@@ -524,6 +531,7 @@ class Player extends Definable implements Renderable, Updatable {
             this.x = transport.getX();
             this.y = transport.getY();
             this.map = transport.getMap().getSlug();
+            this.transported = true;
             if (this.projectile !== null) {
                 this.projectile.remove();
                 this.projectile = null;

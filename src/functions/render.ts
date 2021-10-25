@@ -26,6 +26,13 @@ const render = (): void => {
                 }
             });
         }
+        if (typeof backgrounds !== "undefined") {
+            backgrounds.forEach((background: Definable): void => {
+                if (background instanceof Background) {
+                    background.render();
+                }
+            });
+        }
         if (typeof players !== "undefined") {
             players.forEach((player: Definable): void => {
                 if (player instanceof Player) {
@@ -37,13 +44,6 @@ const render = (): void => {
             projectiles.forEach((projectile: Definable): void => {
                 if (projectile instanceof Projectile) {
                     projectile.render();
-                }
-            });
-        }
-        if (typeof backgrounds !== "undefined") {
-            backgrounds.forEach((background: Definable): void => {
-                if (background instanceof Background) {
-                    background.render();
                 }
             });
         }
