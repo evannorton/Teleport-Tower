@@ -7,6 +7,7 @@ import links from "../elements/links";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
+import focusScreen from "../functions/focusScreen";
 
 class Cutscene extends Definable implements Renderable, Updatable {
     private readonly frames: number;
@@ -45,6 +46,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
                 state.cutscene = null;
                 if (links !== null) {
                     links.classList.add("hidden");
+                    focusScreen();
                 }
             }
         }
