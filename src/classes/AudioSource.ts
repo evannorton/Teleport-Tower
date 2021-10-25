@@ -9,12 +9,13 @@ class AudioSource extends Definable {
     private onPlay: (() => void) | null = null;
     private plays: number = 0;
     private readonly howl: Howl;
-    public constructor(slug: string) {
+    public constructor(slug: string, volume: number) {
         super(slug);
         this.howl = new Howl({
             loop: false,
             preload: true,
-            src: [this.getSRC()]
+            src: [this.getSRC()],
+            volume
         });
         this.howl.on("end", (): void => {
             if (this.loopPoint !== null) {
@@ -62,6 +63,10 @@ class AudioSource extends Definable {
 
     public seek(time: number): void {
         this.howl.seek(time);
+    }
+
+    public setVolume(volume: number): void {
+        this.howl.volume(volume);
     }
 
     public stop(): void {
