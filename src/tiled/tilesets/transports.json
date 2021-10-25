@@ -902,7 +902,7 @@
                 {
                  "name":"transport",
                  "type":"string",
-                 "value":""
+                 "value":"debug"
                 }]
         }],
  "tilewidth":16,

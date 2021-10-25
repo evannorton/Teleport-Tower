@@ -7,15 +7,22 @@ import screenWidth from "../constants/screenWidth";
 import state from "../state";
 
 class Background extends Definable implements Renderable {
-    private readonly image: ImageSource;
-    public constructor(slug: string) {
+    private readonly images: ImageSource[] = [];
+    private readonly maxY: number;
+    public constructor(slug: string, variants: number, maxY: number) {
         super(slug);
-        this.image = new ImageSource(`backgrounds/${this.slug}`);
+        for (let i: number = 0; i < variants; i++) {
+            this.images.push(new ImageSource(`backgrounds/${this.slug}/${i + 1}`));
+        }
+        this.maxY = maxY;
     }
 
     public render(): void {
         if (state.player !== null && state.player.isOnMap(this.slug)) {
-            drawImage(this.image, 0, 0, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, 2);
+            const y: number = state.player.getY();
+            const percent: number = y / this.maxY;
+            const index: number = Math.max(Math.min(Math.floor(this.images.length * percent), this.images.length - 1), 0);
+            drawImage([...this.images].reverse()[index], 0, 0, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, 2);
         }
     }
 }
