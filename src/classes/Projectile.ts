@@ -19,6 +19,7 @@ class Projectile extends Definable implements Renderable, Updatable {
     private readonly height: number = 7;
     private readonly player: Player;
     private readonly spawnedAt: number = state.now;
+    private teleportedAt: number | null = null;
     private readonly width: number = 7;
     private x: number;
     private y: number;
@@ -40,6 +41,10 @@ class Projectile extends Definable implements Renderable, Updatable {
 
     public getHeight(): number {
         return this.height;
+    }
+
+    public getTeleportedAt(): number | null {
+        return this.teleportedAt;
     }
 
     public getWidth(): number {
@@ -73,59 +78,81 @@ class Projectile extends Definable implements Renderable, Updatable {
     public render(): void {
         const images: Map<string, Definable> | undefined = definables.get("ImageSource");
         if (typeof images !== "undefined") {
-            const image: Definable | undefined = images.get("projectile");
-            if (image instanceof ImageSource) {
-                drawImage(image, 0, 0, this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
+            if (this.teleportedAt === null) {
+                const projectileImage: Definable | undefined = images.get("projectile");
+                if (projectileImage instanceof ImageSource) {
+                    drawImage(projectileImage, 0, 0, this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 6);
+                }
+            }
+            else {
+                const portalImage: Definable | undefined = images.get("portal");
+                if (portalImage instanceof ImageSource) {
+                    const elapsed: number = state.now - this.teleportedAt;
+                    const frame: number = elapsed > 200
+                        ? 2
+                        : elapsed > 100
+                            ? 1
+                            : 0;
+                    drawImage(portalImage, frame * 24, 0, 24, 24, this.x + this.width / 2 - 12 - getCameraX(), this.y + this.height / 2 - 12 - getCameraY(), 24, 24, 4);
+                }
             }
         }
     }
 
     public update(): void {
-        if (state.now - this.spawnedAt > projectileDuration && this.player.canTeleport()) {
+        if (this.teleportedAt === null) {
+            if (state.now - this.spawnedAt > projectileDuration && this.player.canTeleport()) {
+                this.teleportedAt = state.now;
+            }
+            else {
+                switch (this.xDirection) {
+                    case "left":
+                        if (this.hasCollisionOnLeft()) {
+                            this.xDirection = "right";
+                        }
+                        else {
+                            this.x -= this.getLeftMovableWidth();
+                        }
+                        break;
+                    case "right":
+                        if (this.hasCollisionOnRight()) {
+                            this.xDirection = "left";
+                        }
+                        else {
+                            this.x += this.getRightMovableWidth();
+                        }
+                        break;
+                }
+                switch (this.yDirection) {
+                    case "up":
+                        if (this.hasCollisionOnTop()) {
+                            this.yDirection = "down";
+                        }
+                        else {
+                            this.y -= this.getTopMovableHeight();
+                        }
+                        break;
+                    case "down":
+                        if (this.hasCollisionOnBottom()) {
+                            this.yDirection = "up";
+                        }
+                        else {
+                            this.y += this.getBottomMovableHeight();
+                        }
+                        break;
+                }
+                if (this.x < 0 || this.x > screenWidth - this.width) {
+                    this.list.delete(this.slug);
+                    this.player.cancelTeleport();
+                }
+            }
+        }
+        else if (state.now - this.teleportedAt >= 400) {
             this.list.delete(this.slug);
             this.player.teleport();
         }
-        else {
-            switch (this.xDirection) {
-                case "left":
-                    if (this.hasCollisionOnLeft()) {
-                        this.xDirection = "right";
-                    }
-                    else {
-                        this.x -= this.getLeftMovableWidth();
-                    }
-                    break;
-                case "right":
-                    if (this.hasCollisionOnRight()) {
-                        this.xDirection = "left";
-                    }
-                    else {
-                        this.x += this.getRightMovableWidth();
-                    }
-                    break;
-            }
-            switch (this.yDirection) {
-                case "up":
-                    if (this.hasCollisionOnTop()) {
-                        this.yDirection = "down";
-                    }
-                    else {
-                        this.y -= this.getTopMovableHeight();
-                    }
-                    break;
-                case "down":
-                    if (this.hasCollisionOnBottom()) {
-                        this.yDirection = "up";
-                    }
-                    else {
-                        this.y += this.getBottomMovableHeight();
-                    }
-                    break;
-            }
-            if (this.x < 0 || this.x > screenWidth - this.width) {
-                this.list.delete(this.slug);
-                this.player.cancelTeleport();
-            }
+        else if (state.now - this.teleportedAt >= 300) {
+            this.player.preTeleport();
         }
     }
 

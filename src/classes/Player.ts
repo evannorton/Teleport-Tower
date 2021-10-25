@@ -85,13 +85,23 @@ class Player extends Definable implements Renderable, Updatable {
         return this.map === map;
     }
 
+    public preTeleport(): void {
+        if (this.projectile !== null) {
+            this.x = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
+            this.y = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
+            this.movementVelocity = this.projectile.getXVelocity();
+            this.direction = this.projectile.getXDirection();
+            this.fallVelocity = baseFallVelocity;
+        }
+    }
+
     public render(): void {
         if (state.cutscene === null) {
             const imageSources: Map<string, Definable> | undefined = definables.get("ImageSource");
             if (typeof imageSources !== "undefined") {
                 const image: Definable | undefined = imageSources.get("player");
                 if (image instanceof ImageSource) {
-                    drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 4);
+                    drawImage(image, this.getSourceX(), this.getSourceY(), this.width, this.height, this.x - getCameraX(), this.y - getCameraY(), this.width, this.height, 5);
                 }
             }
             if (state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
@@ -132,11 +142,6 @@ class Player extends Definable implements Renderable, Updatable {
 
     public teleport(): void {
         if (this.projectile !== null) {
-            this.x = this.projectile.getX() + this.projectile.getWidth() / 2 - this.width / 2;
-            this.y = this.projectile.getY() + this.projectile.getHeight() / 2 - this.height / 2;
-            this.movementVelocity = this.projectile.getXVelocity();
-            this.direction = this.projectile.getXDirection();
-            this.fallVelocity = baseFallVelocity;
             this.projectile = null;
             this.transport();
         }
