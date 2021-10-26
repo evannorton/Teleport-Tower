@@ -40,7 +40,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
     public update(): void {
         if (state.cutscene === this.slug && this.startedAt === null) {
             this.startedAt = state.now;
-            if (this.audio.isPlaying() === false && this.slug !== "outro") {
+            if (this.audio.isPlaying() === false) {
                 this.audio.play(null, null);
             }
         }
