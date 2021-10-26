@@ -69,6 +69,13 @@ const listenToDOM = (): void => {
                     state.player.shoot();
                 }
                 state.mouseHeldAt = null;
+                const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+                if (typeof audio !== "undefined") {
+                    const charge: Definable | undefined = audio.get("sfx/charge");
+                    if (charge instanceof AudioSource) {
+                        charge.stop();
+                    }
+                }
             }
         });
         state.app.renderer.view.addEventListener("mousemove", (e: MouseEvent): void => {
