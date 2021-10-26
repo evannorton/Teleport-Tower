@@ -152,13 +152,9 @@ class Player extends Definable implements Renderable, Updatable {
             const fall: Definable | undefined = audio.get("sfx/fall");
             if (crash instanceof AudioSource && drums instanceof AudioSource && fall instanceof AudioSource) {
                 if (this.hasCollisionOnBottom() && this.fellAt !== null && state.now - this.fellAt > 1000) {
-                    if (fall.isPlaying() === false) {
-                        fall.play(null, null);
-                    }
-                    if (crash.isPlaying() === false) {
-                        crash.setVolume(drums.getVolume());
-                        crash.play(null, null);
-                    }
+                    fall.play(null, null, true);
+                    crash.setVolume(drums.getVolume());
+                    crash.play(null, null, true);
                 }
             }
         }
