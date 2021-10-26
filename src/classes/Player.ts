@@ -190,7 +190,7 @@ class Player extends Definable implements Renderable, Updatable {
                 if (this.transported === false) {
                     const controlsImage: Definable | undefined = imageSources.get("controls");
                     if (controlsImage instanceof ImageSource) {
-                        drawImage(controlsImage, 0, 0, 207, 38, screenWidth / 2 - 207 / 2, 32, 207, 38, 2);
+                        drawImage(controlsImage, 0, 0, 205, 38, screenWidth / 2 - 205 / 2, 32, 205, 38, 2);
                     }
                 }
             }
