@@ -12,7 +12,7 @@ const defineTransports = (): void => {
             new Transport("to-inside", part2, 27 * 16, 172 * 16);
             new Transport("to-outside", part1, 1 * 16, 157 * 16);
             new Transport("big-fall", part1, 2 * 16, 53 * 16);
-            // new Transport("debug", part2, 9 * 16, 2 * 16);
+            // new Transport("debug", part2, 17 * 16, 11 * 16);
         }
     }
 };

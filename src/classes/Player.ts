@@ -31,6 +31,7 @@ class Player extends Definable implements Renderable, Updatable {
     private readonly collisionLeftOffset: number = 8;
     private readonly collisionRightOffset: number = 8;
     private direction: "left" | "right" = "left";
+    private end: boolean = false;
     private fallVelocity: number = baseFallVelocity;
     private fellAt: number | null = null;
     private readonly height: number = 32;
@@ -353,7 +354,7 @@ class Player extends Definable implements Renderable, Updatable {
         if (typeof music !== "undefined") {
             music.forEach((track: Definable): void => {
                 if (track instanceof Music) {
-                    if (track.getMap() === this.map && track.hasBounds(this.y)) {
+                    if (this.end === false && track.getMap() === this.map && track.hasBounds(this.y)) {
                         track.play(this.y);
                     }
                     else {
@@ -362,12 +363,26 @@ class Player extends Definable implements Renderable, Updatable {
                 }
             });
         }
-        this.playChargeSFX();
-        this.playDrumsSFX();
-        this.playFallSFX();
-        this.playAmbientSFX();
+        if (this.end === false) {
+            this.playChargeSFX();
+            this.playDrumsSFX();
+            this.playFallSFX();
+            this.playAmbientSFX();
+        }
         if (this.hasCollisionOnBottom()) {
             this.fellAt = null;
+        }
+        if (this.end === false && this.map === "part2" && this.x >= 14.5 * 16 && this.x <= 20 * 16 && this.y <= 6.5 * 16) {
+            this.y = 15 * 16;
+            this.end = true;
+            state.cutscene = "outro";
+            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+            if (typeof audio !== "undefined") {
+                const credits: Definable | undefined = audio.get("sfx/credits");
+                if (credits instanceof AudioSource && credits.isPlaying() === false) {
+                    credits.play(null, null);
+                }
+            }
         }
     }
 

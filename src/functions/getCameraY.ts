@@ -6,6 +6,9 @@ import screenHeight from "../constants/screenHeight";
 import state from "../state";
 
 const getCameraY = (): number => {
+    if (state.cutscene === "outro") {
+        return -64;
+    }
     const tilemaps: Map<string, Definable> | undefined = definables.get("Tilemap");
     if (state.player !== null && typeof tilemaps !== "undefined") {
         const map: string = state.player.getMap();

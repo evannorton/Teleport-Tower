@@ -13,14 +13,16 @@ class Cutscene extends Definable implements Renderable, Updatable {
     private readonly audio: AudioSource;
     private readonly frames: number;
     private readonly image: ImageSource;
+    private readonly permanent: boolean;
     private startedAt: number | null = null;
     private readonly width: number;
-    public constructor(slug: string, frames: number, width: number) {
+    public constructor(slug: string, frames: number, width: number, permanent: boolean) {
         super(slug);
         this.image = new ImageSource(`cutscenes/${this.slug}`);
         this.audio = new AudioSource(`sfx/cutscenes/${this.slug}`, 1);
         this.frames = frames;
         this.width = width;
+        this.permanent = permanent;
     }
 
     public render(): void {
@@ -28,7 +30,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
             const diff: number = state.now - this.startedAt;
             const frameDuration: number = 100;
             const totalLength: number = frameDuration * this.frames;
-            const frame: number = Math.floor(diff / totalLength * this.frames);
+            const frame: number = Math.min(this.frames - 1, Math.floor(diff / totalLength * this.frames));
             const sourceX: number = frame % this.width * screenWidth;
             const sourceY: number = Math.floor(frame / this.width) * screenHeight;
             drawImage(this.image, sourceX, sourceY, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, 8);
@@ -38,11 +40,11 @@ class Cutscene extends Definable implements Renderable, Updatable {
     public update(): void {
         if (state.cutscene === this.slug && this.startedAt === null) {
             this.startedAt = state.now;
-            if (this.audio.isPlaying() === false) {
+            if (this.audio.isPlaying() === false && this.slug !== "outro") {
                 this.audio.play(null, null);
             }
         }
-        else if (this.startedAt !== null) {
+        else if (this.startedAt !== null && this.permanent === false) {
             const diff: number = state.now - this.startedAt;
             const frameDuration: number = 100;
             const totalLength: number = frameDuration * this.frames;
