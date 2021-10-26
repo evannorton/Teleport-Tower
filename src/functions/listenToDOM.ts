@@ -5,6 +5,7 @@ import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
 import state from "../state";
+import takeScreenshot from "./takeScreenshot";
 
 const listenToDOM = (): void => {
     addEventListener("beforeunload", (e: Event): void => {
@@ -32,6 +33,9 @@ const listenToDOM = (): void => {
                     }
                     break;
                 }
+                case "p":
+                    takeScreenshot();
+                    break;
                 case "tab":
                     e.preventDefault();
                     break;
