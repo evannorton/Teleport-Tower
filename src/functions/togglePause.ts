@@ -18,7 +18,7 @@ const togglePause = (): void => {
             const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
             if (typeof audio !== "undefined") {
                 audio.forEach((track: Definable): void => {
-                    if (track instanceof AudioSource && track.isPlaying()) {
+                    if (track instanceof AudioSource && track.isPlaying() && track.getSlug().includes("music/") === false && track.getSlug() !== "sfx/outside") {
                         track.pause();
                         state.pausedAudio.push(track);
                     }

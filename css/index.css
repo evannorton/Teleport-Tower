@@ -7,7 +7,7 @@ body {
     background-color: #000000;
     color: #ffffff;
     display: flex;
-    font-family: RetroPixels;
+    font-family: sans-serif;
     height: 100vh;
     justify-content: center;
     position: fixed;
@@ -90,13 +90,31 @@ body.paused #pause {
     display: none;
 }
 
+body:not(.paused) #pause-menu {
+    display: none;
+}
+
 #pause-menu {
+    align-items: center;
     background-color: rgba(0, 0, 0, .5);
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    justify-content: center;
     position: absolute;
     width: 100%;
 }
 
-body:not(.paused) #pause-menu {
-    display: none;
+#pause-menu>*:not(:last-child) {
+    margin-bottom: 16px;
+}
+
+#pause-menu label {
+    cursor: url(../images/cursor.png), default;
+    font-size: 2em;
+}
+
+#pause-menu input {
+    cursor: url(../images/cursor.png), default;
+    width: 33%;
 }

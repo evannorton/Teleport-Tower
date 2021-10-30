@@ -1,6 +1,7 @@
 import AudioSource from "./AudioSource";
 import Definable from "./Definable";
 import Updatable from "../interfaces/Updatable";
+import musicVolume from "../elements/musicVolume";
 import state from "../state";
 
 class Music extends Definable implements Updatable {
@@ -54,16 +55,19 @@ class Music extends Definable implements Updatable {
     }
 
     public update(): void {
-        const fellAt: number | null = state.player === null ? null : state.player.getFellAt();
-        if (state.player !== null && state.player.hasCollisionOnBottom() === false && fellAt !== null && state.now - fellAt > 1000) {
-            this.audio.forEach((audio: AudioSource): void => {
-                audio.setVolume(0.5);
-            });
-        }
-        else {
-            this.audio.forEach((audio: AudioSource): void => {
-                audio.setVolume(0.6);
-            });
+        if (musicVolume instanceof HTMLInputElement) {
+            const fellAt: number | null = state.player === null ? null : state.player.getFellAt();
+            const volume: number = Number(musicVolume.value) / 100;
+            if (state.player !== null && state.player.hasCollisionOnBottom() === false && fellAt !== null && state.now - fellAt > 1000) {
+                this.audio.forEach((audio: AudioSource): void => {
+                    audio.setVolume(0.5 * volume);
+                });
+            }
+            else {
+                this.audio.forEach((audio: AudioSource): void => {
+                    audio.setVolume(0.6 * volume);
+                });
+            }
         }
     }
 }
