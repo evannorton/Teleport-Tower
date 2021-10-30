@@ -408,6 +408,7 @@ class Player extends Definable implements Renderable, Updatable {
                 const credits: Definable | undefined = audio.get("sfx/credits");
                 if (credits instanceof AudioSource && credits.isPlaying() === false) {
                     credits.play(null, null);
+                    state.runEndedAt = state.now;
                 }
             }
         }

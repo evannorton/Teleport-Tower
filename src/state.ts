@@ -5,6 +5,7 @@ import Player from "./classes/Player";
 const state: {
     app: Application | null;
     cutscene: string | null;
+    fontLoaded: boolean;
     heldKeys: string[];
     interactedAt: number | null;
     mouseHeldAt: number | null;
@@ -13,10 +14,13 @@ const state: {
     now: number;
     pausedAudio: AudioSource[];
     player: Player | null;
+    resetAt: number;
+    runEndedAt: number | null;
     tickedAt: number;
 } = {
     app: null,
     cutscene: "intro",
+    fontLoaded: false,
     heldKeys: [],
     interactedAt: null,
     mouseHeldAt: null,
@@ -25,6 +29,8 @@ const state: {
     now: performance.now(),
     pausedAudio: [],
     player: null,
+    resetAt: performance.now(),
+    runEndedAt: null,
     tickedAt: 0
 };
 

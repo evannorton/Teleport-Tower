@@ -1,4 +1,4 @@
-import { Application, SCALE_MODES, settings, utils } from "pixi.js";
+import { Application, Loader, SCALE_MODES, settings, utils } from "pixi.js";
 import Player from "../classes/Player";
 import define from "./define/define";
 import focusScreen from "./focusScreen";
@@ -29,6 +29,10 @@ const run = (): void => {
         screen.appendChild(state.app.view);
     }
     sizeScreen();
+    const loader: Loader = new Loader;
+    loader.add("./fonts/RetroPixels.fnt").load((): void => {
+        state.fontLoaded = true;
+    });
     listenToDOM();
     state.player = new Player;
     state.app.ticker.add(tick);
