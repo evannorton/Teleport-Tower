@@ -263,6 +263,9 @@ class Player extends Definable implements Renderable, Updatable {
             this.transport();
             this.preteleporting = false;
             this.chargePlayed = false;
+            if (state.mouseHeldAt !== null) {
+                state.mouseHeldAt = state.now;
+            }
         }
     }
 
