@@ -11,6 +11,7 @@ import getRunTime from "./getRunTime";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
+import timer from "../elements/timer";
 
 const render = (): void => {
     const backgrounds: Map<string, Definable> | undefined = definables.get("Background");
@@ -56,7 +57,7 @@ const render = (): void => {
                 }
             });
         }
-        if (state.fontLoaded && state.cutscene === null) {
+        if (state.fontLoaded && state.cutscene === null && timer instanceof HTMLInputElement && timer.checked) {
             const sprite: BitmapText = new BitmapText(getRunTime(), {
                 align: "right",
                 fontName: "RetroPixels",
