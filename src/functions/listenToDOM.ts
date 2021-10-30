@@ -1,8 +1,11 @@
 import AudioSource from "../classes/AudioSource";
 import Definable from "../classes/Definable";
 import definables from "../maps/definables";
+import focusScreen from "./focusScreen";
 import interact from "./interact";
+import mute from "../elements/mute";
 import pause from "../elements/pause";
+import pauseMenu from "../elements/pauseMenu";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
@@ -19,6 +22,24 @@ const listenToDOM = (): void => {
     addEventListener("resize", (): void => {
         sizeScreen();
     });
+    if (pauseMenu !== null) {
+        pauseMenu.addEventListener("click", (): void => {
+            focusScreen();
+        });
+    }
+    if (mute !== null) {
+        mute.addEventListener("change", (): void => {
+            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+            if (typeof audio !== "undefined") {
+                audio.forEach((source: Definable): void => {
+                    if (source instanceof AudioSource) {
+                        source.toggleMute();
+                    }
+                });
+            }
+            focusScreen();
+        });
+    }
     if (pause !== null) {
         pause.addEventListener("click", (): void => {
             togglePause();
@@ -50,6 +71,9 @@ const listenToDOM = (): void => {
                                 source.toggleMute();
                             }
                         });
+                    }
+                    if (mute instanceof HTMLInputElement) {
+                        mute.checked = mute.checked === false;
                     }
                     break;
                 }
