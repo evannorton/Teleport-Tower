@@ -7,6 +7,7 @@ import mute from "../elements/mute";
 import pause from "../elements/pause";
 import pauseMenu from "../elements/pauseMenu";
 import reset from "./reset";
+import resetButton from "../elements/resetButton";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
@@ -23,6 +24,11 @@ const listenToDOM = (): void => {
     addEventListener("resize", (): void => {
         sizeScreen();
     });
+    if (resetButton !== null) {
+        resetButton.addEventListener("click", (): void => {
+            reset();
+        });
+    }
     if (pauseMenu !== null) {
         pauseMenu.addEventListener("click", (): void => {
             focusScreen();

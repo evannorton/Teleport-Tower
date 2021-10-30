@@ -119,13 +119,31 @@ body:not(.paused) #pause-menu {
 }
 
 #pause-menu input[type=checkbox] {
-    -ms-transform: scale(2); /* IE */
-    -moz-transform: scale(2); /* FF */
-    -webkit-transform: scale(2); /* Safari and Chrome */
-    -o-transform: scale(2); /* Opera */
+    -ms-transform: scale(2);
+    /* IE */
+    -moz-transform: scale(2);
+    /* FF */
+    -webkit-transform: scale(2);
+    /* Safari and Chrome */
+    -o-transform: scale(2);
+    /* Opera */
     transform: scale(2);
 }
 
 #pause-menu input[type=range] {
     width: 33%;
+}
+
+#pause-menu input[type=button] {
+    background-color: transparent;
+    border: 3px solid white;
+    color: white;
+    cursor: url(../images/cursor-pointer.png) 7 2, pointer;
+    font-size: 2em;
+    margin-top: 0.5em;
+    padding: 0.25em 0.5em;
+}
+
+#pause-menu input[type=button]:hover {
+    opacity: .7;
 }
