@@ -6,6 +6,7 @@ import interact from "./interact";
 import mute from "../elements/mute";
 import pause from "../elements/pause";
 import pauseMenu from "../elements/pauseMenu";
+import reset from "./reset";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
@@ -79,6 +80,11 @@ const listenToDOM = (): void => {
                 }
                 case "p":
                     takeScreenshot();
+                    break;
+                case "r":
+                    if (e.shiftKey) {
+                        reset();
+                    }
                     break;
                 case "tab":
                     e.preventDefault();

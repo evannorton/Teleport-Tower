@@ -218,6 +218,26 @@ class Player extends Definable implements Renderable, Updatable {
         }
     }
 
+    public reset(): void {
+        if (this.projectile !== null) {
+            this.projectile.remove();
+        }
+        this.blinkedAt = state.now;
+        this.chargePlayed = false;
+        this.direction = "left";
+        this.end = false;
+        this.fallVelocity = baseFallVelocity;
+        this.fellAt = null;
+        this.map = "part1";
+        this.movementVelocity = 0;
+        this.preteleporting = false;
+        this.projectile = null;
+        this.transported = false;
+        this.walkedAt = null;
+        this.x = 180;
+        this.y = 172 * 16;
+    }
+
     public shoot(): void {
         if (this.hasCollisionOnBottom() && this.projectile === null && state.mouseX !== null && state.mouseY !== null && state.mouseHeldAt !== null && state.cutscene === null) {
             const range: number = maxProjectilePower - minProjectilePower;

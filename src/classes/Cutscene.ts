@@ -41,6 +41,10 @@ class Cutscene extends Definable implements Renderable, Updatable {
         }
     }
 
+    public reset(): void {
+        this.startedAt = null;
+    }
+
     public update(): void {
         if (state.cutscene === this.slug && this.startedAt === null) {
             this.startedAt = state.now;
