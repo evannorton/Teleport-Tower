@@ -6,6 +6,7 @@ const state: {
     app: Application | null;
     cutscene: string | null;
     heldKeys: string[];
+    interactedAt: number | null;
     mouseHeldAt: number | null;
     mouseX: number | null;
     mouseY: number | null;
@@ -17,6 +18,7 @@ const state: {
     app: null,
     cutscene: "intro",
     heldKeys: [],
+    interactedAt: null,
     mouseHeldAt: null,
     mouseX: null,
     mouseY: null,

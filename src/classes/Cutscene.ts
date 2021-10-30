@@ -25,6 +25,10 @@ class Cutscene extends Definable implements Renderable, Updatable {
         this.permanent = permanent;
     }
 
+    public getAudio(): AudioSource {
+        return this.audio;
+    }
+
     public render(): void {
         if (this.startedAt !== null) {
             const diff: number = state.now - this.startedAt;

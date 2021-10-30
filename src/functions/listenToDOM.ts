@@ -1,6 +1,7 @@
 import AudioSource from "../classes/AudioSource";
 import Definable from "../classes/Definable";
 import definables from "../maps/definables";
+import interact from "./interact";
 import pause from "../elements/pause";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
@@ -33,6 +34,7 @@ const listenToDOM = (): void => {
             e.preventDefault();
         });
         state.app.renderer.view.addEventListener("keydown", (e: KeyboardEvent): void => {
+            interact();
             const key: string = e.key.toLowerCase();
             switch (key) {
                 case " ":
@@ -76,6 +78,7 @@ const listenToDOM = (): void => {
             e.preventDefault();
         });
         state.app.renderer.view.addEventListener("mousedown", (e: MouseEvent): void => {
+            interact();
             if (e.target instanceof HTMLCanvasElement) {
                 if (state.player !== null) {
                     state.player.blink();

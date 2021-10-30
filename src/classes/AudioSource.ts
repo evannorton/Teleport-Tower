@@ -3,6 +3,7 @@ import { Howl } from "howler";
 import Updatable from "../interfaces/Updatable";
 import musicVolume from "../elements/musicVolume";
 import sfxVolume from "../elements/sfxVolume";
+import state from "../state";
 
 class AudioSource extends Definable implements Updatable {
     private fadingIn: boolean = false;
@@ -71,10 +72,12 @@ class AudioSource extends Definable implements Updatable {
     }
 
     public play(loopPoint: number | null, onPlay: (() => void) | null, override?: boolean): void {
-        this.loopPoint = loopPoint;
-        this.onPlay = onPlay;
-        if (override === true || this.isPlaying() === false) {
-            this.howl.play();
+        if (state.interactedAt !== null) {
+            this.loopPoint = loopPoint;
+            this.onPlay = onPlay;
+            if (override === true || this.isPlaying() === false) {
+                this.howl.play();
+            }
         }
     }
 
