@@ -1,4 +1,5 @@
 import Background from "../classes/Background";
+import { BitmapText } from "@pixi/text-bitmap";
 import Cutscene from "../classes/Cutscene";
 import Definable from "../classes/Definable";
 import Player from "../classes/Player";
@@ -6,6 +7,7 @@ import Projectile from "../classes/Projectile";
 import Tilemap from "../classes/Tilemap";
 import definables from "../maps/definables";
 import drawRectangle from "./draw/drawRectangle";
+import getRunTime from "./getRunTime";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
@@ -53,6 +55,20 @@ const render = (): void => {
                     cutscene.render();
                 }
             });
+        }
+        if (state.fontLoaded && state.cutscene === null) {
+            const sprite: BitmapText = new BitmapText(getRunTime(), {
+                align: "right",
+                fontName: "RetroPixels",
+                fontSize: 16,
+                tint: state.player !== null && state.player.getMap() === "part1" ? Number(`0x000000`) : Number(`0xffffff`)
+            });
+            sprite.x = screenWidth - 22;
+            sprite.y = 7;
+            sprite.anchor.set(0, 0);
+            sprite.zIndex = 10;
+            sprite.pivot.x = sprite.textWidth;
+            state.app.stage.addChild(sprite);
         }
         state.app.stage.sortChildren();
         state.app.render();

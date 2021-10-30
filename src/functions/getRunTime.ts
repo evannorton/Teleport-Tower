@@ -1,10 +1,7 @@
 import state from "../state";
 
 const getRunTime = (): string => {
-    if (state.runEndedAt === null) {
-        return "0";
-    }
-    let time: number = Math.floor(state.runEndedAt - state.resetAt);
+    let time: number = Math.floor((state.runEndedAt === null ? state.now : state.runEndedAt) - state.resetAt);
     let hours: number = 0;
     let minutes: number = 0;
     let seconds: number = 0;

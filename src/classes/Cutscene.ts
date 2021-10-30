@@ -41,18 +41,18 @@ class Cutscene extends Definable implements Renderable, Updatable {
             const sourceY: number = Math.floor(frame / this.width) * screenHeight;
             drawImage(this.image, sourceX, sourceY, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, 8);
             if (this.slug === "outro" && frame >= this.frames - 9) {
-                const sprite: BitmapText = new BitmapText(getRunTime(), {
-                    align: "left",
-                    fontName: "RetroPixels",
-                    fontSize: 32,
-                    tint: Number(`0x000000`)
-                });
-                sprite.x = 8;
-                sprite.y = 4;
-                sprite.anchor.set(0, 0);
-                sprite.zIndex = 10;
-                sprite.pivot.x = 0;
                 if (state.app !== null && state.fontLoaded) {
+                    const sprite: BitmapText = new BitmapText(getRunTime(), {
+                        align: "left",
+                        fontName: "RetroPixels",
+                        fontSize: 32,
+                        tint: Number(`0x000000`)
+                    });
+                    sprite.x = 8;
+                    sprite.y = 4;
+                    sprite.anchor.set(0, 0);
+                    sprite.zIndex = 10;
+                    sprite.pivot.x = 0;
                     state.app.stage.addChild(sprite);
                 }
             }

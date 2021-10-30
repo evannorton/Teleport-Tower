@@ -6,6 +6,7 @@ import state from "../state";
 import togglePause from "./togglePause";
 
 const reset = (): void => {
+    state.runEndedAt = null;
     state.resetAt = state.now;
     state.pausedAudio.length = 0;
     if (state.mouseHeldAt !== null) {
