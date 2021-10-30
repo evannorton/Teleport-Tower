@@ -67,3 +67,36 @@ body {
     margin-top: 27%;
     width: 13%;
 }
+
+body.cutscene .pause-toggle {
+    display: none;
+}
+
+.pause-toggle {
+    cursor: url(../images/cursor-pointer.png) 7 2, pointer;
+    filter: invert(100%) sepia(0%) saturate(7491%) hue-rotate(313deg) brightness(106%) contrast(102%);
+    left: 2%;
+    opacity: .7;
+    position: absolute;
+    top: 2%;
+    width: 3%;
+}
+
+body:not(.paused) #unpause {
+    display: none;
+}
+
+body.paused #pause {
+    display: none;
+}
+
+#pause-menu {
+    background-color: rgba(0, 0, 0, .5);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+body:not(.paused) #pause-menu {
+    display: none;
+}

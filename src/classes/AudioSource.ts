@@ -41,6 +41,10 @@ class AudioSource extends Definable {
         this.howl.fade(1, 0, duration);
     }
 
+    public getLoopPoint(): number | null {
+        return this.loopPoint;
+    }
+
     public getSRC(): string {
         return `./audio/${this.slug}.mp3`;
     }
@@ -55,6 +59,10 @@ class AudioSource extends Definable {
 
     public isPlaying(): boolean {
         return this.howl.playing();
+    }
+
+    public pause(): void {
+        this.howl.pause();
     }
 
     public play(loopPoint: number | null, onPlay: (() => void) | null, override?: boolean): void {

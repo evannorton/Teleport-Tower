@@ -1,11 +1,14 @@
 import AudioSource from "../classes/AudioSource";
 import Definable from "../classes/Definable";
 import definables from "../maps/definables";
+import pause from "../elements/pause";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import sizeScreen from "./sizeScreen";
 import state from "../state";
 import takeScreenshot from "./takeScreenshot";
+import togglePause from "./togglePause";
+import unpause from "../elements/unpause";
 
 const listenToDOM = (): void => {
     addEventListener("beforeunload", (e: Event): void => {
@@ -15,6 +18,16 @@ const listenToDOM = (): void => {
     addEventListener("resize", (): void => {
         sizeScreen();
     });
+    if (pause !== null) {
+        pause.addEventListener("click", (): void => {
+            togglePause();
+        });
+    }
+    if (unpause !== null) {
+        unpause.addEventListener("click", (): void => {
+            togglePause();
+        });
+    }
     if (state.app !== null) {
         state.app.renderer.view.addEventListener("contextmenu", (e: Event): void => {
             e.preventDefault();
@@ -22,6 +35,11 @@ const listenToDOM = (): void => {
         state.app.renderer.view.addEventListener("keydown", (e: KeyboardEvent): void => {
             const key: string = e.key.toLowerCase();
             switch (key) {
+                case " ":
+                case "enter":
+                case "escape":
+                    togglePause();
+                    break;
                 case "m": {
                     const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
                     if (typeof audio !== "undefined") {

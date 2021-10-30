@@ -1,4 +1,5 @@
 import { Application } from "@pixi/app";
+import AudioSource from "./classes/AudioSource";
 import Player from "./classes/Player";
 
 const state: {
@@ -9,6 +10,7 @@ const state: {
     mouseX: number | null;
     mouseY: number | null;
     now: number;
+    pausedAudio: AudioSource[];
     player: Player | null;
     tickedAt: number;
 } = {
@@ -19,6 +21,7 @@ const state: {
     mouseX: null,
     mouseY: null,
     now: performance.now(),
+    pausedAudio: [],
     player: null,
     tickedAt: 0
 };

@@ -4,7 +4,9 @@ import update from "./update";
 
 const tick = (): void => {
     if (state.app !== null) {
-        state.now += state.app.ticker.deltaMS;
+        if (document.body.classList.contains("paused") === false) {
+            state.now += state.app.ticker.deltaMS;
+        }
         update();
         render();
         state.tickedAt = state.now;
