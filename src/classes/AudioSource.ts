@@ -2,6 +2,7 @@ import Definable from "./Definable";
 import { Howl } from "howler";
 import Updatable from "../interfaces/Updatable";
 import musicVolume from "../elements/musicVolume";
+import sfxVolume from "../elements/sfxVolume";
 
 class AudioSource extends Definable implements Updatable {
     private fadingIn: boolean = false;
@@ -81,6 +82,13 @@ class AudioSource extends Definable implements Updatable {
         this.howl.seek(time);
     }
 
+    public setSFXVolume(): void {
+        if (sfxVolume instanceof HTMLInputElement) {
+            const volume: number = Number(sfxVolume.value) / 100;
+            this.setVolume(this.initialVolume * volume);
+        }
+    }
+
     public setVolume(volume: number): void {
         this.howl.volume(volume);
     }
@@ -100,7 +108,7 @@ class AudioSource extends Definable implements Updatable {
 
     public update(): void {
         if (musicVolume instanceof HTMLInputElement) {
-            if (this.slug === "sfx/outside") {
+            if (this.slug === "sfx/outside" || this.slug === "sfx/credits") {
                 const volume: number = Number(musicVolume.value) / 100;
                 this.setVolume(this.initialVolume * volume);
             }

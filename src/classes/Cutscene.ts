@@ -41,6 +41,7 @@ class Cutscene extends Definable implements Renderable, Updatable {
         if (state.cutscene === this.slug && this.startedAt === null) {
             this.startedAt = state.now;
             if (this.audio.isPlaying() === false) {
+                this.audio.setSFXVolume();
                 this.audio.play(null, null);
             }
         }

@@ -22,6 +22,7 @@ import movementVelocity from "../constants/movementVelocity";
 import { nanoid } from "nanoid";
 import projectileChargeLength from "../constants/projectileChargeLength";
 import screenWidth from "../constants/screenWidth";
+import sfxVolume from "../elements/sfxVolume";
 import state from "../state";
 import walkSpeed from "../constants/walkSpeed";
 
@@ -119,6 +120,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (charge instanceof AudioSource) {
                 if (state.cutscene === null && this.chargePlayed === false && state.mouseHeldAt !== null && this.hasCollisionOnBottom() && this.projectile === null) {
                     if (charge.isPlaying() === false) {
+                        charge.setSFXVolume();
                         charge.play(null, null);
                         this.chargePlayed = true;
                     }
@@ -128,18 +130,21 @@ class Player extends Definable implements Renderable, Updatable {
     }
 
     public playDrumsSFX(): void {
-        const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
-        if (typeof audio !== "undefined") {
-            const drums: Definable | undefined = audio.get("sfx/drums");
-            if (drums instanceof AudioSource) {
-                if (this.hasCollisionOnBottom() === false && this.fellAt !== null && state.now - this.fellAt > 1000) {
-                    if (drums.isPlaying() === false) {
-                        drums.play(null, null);
-                        drums.fadeIn(1000, 0.7);
+        if (sfxVolume instanceof HTMLInputElement) {
+            const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+            if (typeof audio !== "undefined") {
+                const drums: Definable | undefined = audio.get("sfx/drums");
+                if (drums instanceof AudioSource) {
+                    if (this.hasCollisionOnBottom() === false && this.fellAt !== null && state.now - this.fellAt > 1000) {
+                        if (drums.isPlaying() === false) {
+                            const volume: number = Number(sfxVolume.value) / 100;
+                            drums.fadeIn(1000, 0.7 * volume);
+                            drums.play(null, null);
+                        }
                     }
-                }
-                else if (drums.isPlaying()) {
-                    drums.stop();
+                    else if (drums.isPlaying()) {
+                        drums.stop();
+                    }
                 }
             }
         }
@@ -153,6 +158,7 @@ class Player extends Definable implements Renderable, Updatable {
             const fall: Definable | undefined = audio.get("sfx/fall");
             if (crash instanceof AudioSource && drums instanceof AudioSource && fall instanceof AudioSource) {
                 if (this.hasCollisionOnBottom() && this.fellAt !== null && state.now - this.fellAt > 1000) {
+                    fall.setSFXVolume();
                     fall.play(null, null, true);
                     crash.setVolume(drums.getVolume());
                     crash.play(null, null, true);
@@ -172,6 +178,7 @@ class Player extends Definable implements Renderable, Updatable {
             if (typeof audio !== "undefined") {
                 const teleport: Definable | undefined = audio.get("sfx/teleport");
                 if (teleport instanceof AudioSource && this.preteleporting === false) {
+                    teleport.setSFXVolume();
                     teleport.play(null, null, true);
                 }
             }

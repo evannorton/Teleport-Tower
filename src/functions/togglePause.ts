@@ -9,6 +9,7 @@ const togglePause = (): void => {
         if (document.body.classList.contains("paused")) {
             document.body.classList.remove("paused");
             state.pausedAudio.forEach((track: AudioSource): void => {
+                track.setSFXVolume();
                 track.play(track.getLoopPoint(), null);
             });
             state.pausedAudio.length = 0;

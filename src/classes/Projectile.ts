@@ -77,6 +77,7 @@ class Projectile extends Definable implements Renderable, Updatable {
         if (typeof audio !== "undefined") {
             const bounce: Definable | undefined = audio.get("sfx/bounce");
             if (bounce instanceof AudioSource) {
+                bounce.setSFXVolume();
                 bounce.play(null, null, true);
             }
         }
