@@ -7,7 +7,7 @@ body {
     background-color: #000000;
     color: #ffffff;
     display: flex;
-    font-family: RetroPixels;
+    font-family: sans-serif;
     height: 100vh;
     justify-content: center;
     position: fixed;
@@ -66,4 +66,84 @@ body {
     margin-left: 61%;
     margin-top: 27%;
     width: 13%;
+}
+
+body.cutscene .pause-toggle {
+    display: none;
+}
+
+.pause-toggle {
+    cursor: url(../images/cursor-pointer.png) 7 2, pointer;
+    filter: invert(100%) sepia(0%) saturate(7491%) hue-rotate(313deg) brightness(106%) contrast(102%);
+    left: 2%;
+    opacity: .7;
+    position: absolute;
+    top: 2%;
+    width: 3%;
+}
+
+body:not(.paused) #unpause {
+    display: none;
+}
+
+body.paused #pause {
+    display: none;
+}
+
+body:not(.paused) #pause-menu {
+    display: none;
+}
+
+#pause-menu {
+    align-items: center;
+    background-color: rgba(0, 0, 0, .5);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+}
+
+#pause-menu>*:not(:last-child) {
+    margin-bottom: 16px;
+}
+
+#pause-menu label {
+    cursor: url(../images/cursor.png), default;
+    font-size: 2em;
+}
+
+#pause-menu input {
+    cursor: url(../images/cursor.png), default;
+}
+
+#pause-menu input[type=checkbox] {
+    -ms-transform: scale(2);
+    /* IE */
+    -moz-transform: scale(2);
+    /* FF */
+    -webkit-transform: scale(2);
+    /* Safari and Chrome */
+    -o-transform: scale(2);
+    /* Opera */
+    transform: scale(2);
+}
+
+#pause-menu input[type=range] {
+    width: 33%;
+}
+
+#pause-menu input[type=button] {
+    background-color: transparent;
+    border: 3px solid white;
+    color: white;
+    cursor: url(../images/cursor-pointer.png) 7 2, pointer;
+    font-size: 2em;
+    margin-top: 0.5em;
+    padding: 0.25em 0.5em;
+}
+
+#pause-menu input[type=button]:hover {
+    opacity: .7;
 }
