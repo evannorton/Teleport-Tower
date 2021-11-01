@@ -1,5 +1,6 @@
 import { BaseTexture, Loader, Texture } from "pixi.js";
 import Definable from "./Definable";
+import state from "../state";
 
 class ImageSource extends Definable {
     private isLoaded: boolean = false;
@@ -9,6 +10,7 @@ class ImageSource extends Definable {
         super(slug);
         this.loader.add(this.getSRC()).load((): void => {
             this.isLoaded = true;
+            state.loadedAssets++;
         });
     }
 

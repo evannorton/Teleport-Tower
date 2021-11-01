@@ -8,6 +8,7 @@ const state: {
     fontLoaded: boolean;
     heldKeys: string[];
     interactedAt: number | null;
+    loadedAssets: number;
     mouseHeldAt: number | null;
     mouseX: number | null;
     mouseY: number | null;
@@ -23,6 +24,7 @@ const state: {
     fontLoaded: false,
     heldKeys: [],
     interactedAt: null,
+    loadedAssets: 0,
     mouseHeldAt: null,
     mouseX: null,
     mouseY: null,

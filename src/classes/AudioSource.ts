@@ -1,6 +1,7 @@
 import Definable from "./Definable";
 import { Howl } from "howler";
 import Updatable from "../interfaces/Updatable";
+import handleAssetLoad from "../functions/handleAssetLoad";
 import musicVolume from "../elements/musicVolume";
 import sfxVolume from "../elements/sfxVolume";
 import state from "../state";
@@ -18,6 +19,9 @@ class AudioSource extends Definable implements Updatable {
         super(slug);
         this.howl = new Howl({
             loop: false,
+            onload: (): void => {
+                handleAssetLoad();
+            },
             preload: true,
             src: [this.getSRC()],
             volume

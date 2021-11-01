@@ -6,7 +6,7 @@ import state from "../state";
 const interact = (): void => {
     if (state.interactedAt === null) {
         state.interactedAt = state.now;
-        if (state.cutscene !== null) {
+        if (document.body.classList.contains("loading") === false && state.cutscene !== null) {
             const cutscenes: Map<string, Definable> | undefined = definables.get("Cutscene");
             if (typeof cutscenes !== "undefined") {
                 const cutscene: Definable | undefined = cutscenes.get(state.cutscene);

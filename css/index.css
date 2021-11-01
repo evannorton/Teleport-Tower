@@ -92,6 +92,10 @@ body:not(.paused) #unpause {
     display: none;
 }
 
+body.loading #pause {
+    display: none;
+}
+
 body.paused #pause {
     display: none;
 }

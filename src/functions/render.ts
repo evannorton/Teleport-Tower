@@ -8,6 +8,7 @@ import Tilemap from "../classes/Tilemap";
 import definables from "../maps/definables";
 import drawRectangle from "./draw/drawRectangle";
 import getRunTime from "./getRunTime";
+import getTotalAssets from "./getTotalAssets";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
@@ -22,54 +23,62 @@ const render = (): void => {
     if (state.app !== null) {
         state.app.stage.removeChildren();
         drawRectangle("#000000", 0, 0, screenWidth, screenHeight, 1);
-        if (typeof tilemaps !== "undefined") {
-            tilemaps.forEach((tilemap: Definable): void => {
-                if (tilemap instanceof Tilemap) {
-                    tilemap.render();
-                }
-            });
+        if (document.body.classList.contains("loading")) {
+            const barHeight: number = 24;
+            const percent: number = state.loadedAssets / getTotalAssets();
+            drawRectangle("#343434", screenWidth / 4, screenHeight / 2 - barHeight / 2, screenWidth / 2, barHeight, 1);
+            drawRectangle("#7b7b7b", screenWidth / 4, screenHeight / 2 - barHeight / 2, percent * (screenWidth / 2), barHeight, 1);
         }
-        if (typeof backgrounds !== "undefined") {
-            backgrounds.forEach((background: Definable): void => {
-                if (background instanceof Background) {
-                    background.render();
-                }
-            });
-        }
-        if (typeof players !== "undefined") {
-            players.forEach((player: Definable): void => {
-                if (player instanceof Player) {
-                    player.render();
-                }
-            });
-        }
-        if (typeof projectiles !== "undefined") {
-            projectiles.forEach((projectile: Definable): void => {
-                if (projectile instanceof Projectile) {
-                    projectile.render();
-                }
-            });
-        }
-        if (typeof cutscenes !== "undefined") {
-            cutscenes.forEach((cutscene: Definable): void => {
-                if (cutscene instanceof Cutscene) {
-                    cutscene.render();
-                }
-            });
-        }
-        if (state.fontLoaded && state.cutscene === null && timer instanceof HTMLInputElement && timer.checked) {
-            const sprite: BitmapText = new BitmapText(getRunTime(), {
-                align: "right",
-                fontName: "RetroPixels",
-                fontSize: 16,
-                tint: state.player !== null && state.player.getMap() === "part1" ? Number(`0x000000`) : Number(`0xffffff`)
-            });
-            sprite.x = screenWidth - 22;
-            sprite.y = 7;
-            sprite.anchor.set(0, 0);
-            sprite.zIndex = 10;
-            sprite.pivot.x = sprite.textWidth;
-            state.app.stage.addChild(sprite);
+        else {
+            if (typeof tilemaps !== "undefined") {
+                tilemaps.forEach((tilemap: Definable): void => {
+                    if (tilemap instanceof Tilemap) {
+                        tilemap.render();
+                    }
+                });
+            }
+            if (typeof backgrounds !== "undefined") {
+                backgrounds.forEach((background: Definable): void => {
+                    if (background instanceof Background) {
+                        background.render();
+                    }
+                });
+            }
+            if (typeof players !== "undefined") {
+                players.forEach((player: Definable): void => {
+                    if (player instanceof Player) {
+                        player.render();
+                    }
+                });
+            }
+            if (typeof projectiles !== "undefined") {
+                projectiles.forEach((projectile: Definable): void => {
+                    if (projectile instanceof Projectile) {
+                        projectile.render();
+                    }
+                });
+            }
+            if (typeof cutscenes !== "undefined") {
+                cutscenes.forEach((cutscene: Definable): void => {
+                    if (cutscene instanceof Cutscene) {
+                        cutscene.render();
+                    }
+                });
+            }
+            if (state.fontLoaded && state.cutscene === null && timer instanceof HTMLInputElement && timer.checked) {
+                const sprite: BitmapText = new BitmapText(getRunTime(), {
+                    align: "right",
+                    fontName: "RetroPixels",
+                    fontSize: 16,
+                    tint: state.player !== null && state.player.getMap() === "part1" ? Number(`0x000000`) : Number(`0xffffff`)
+                });
+                sprite.x = screenWidth - 22;
+                sprite.y = 7;
+                sprite.anchor.set(0, 0);
+                sprite.zIndex = 10;
+                sprite.pivot.x = sprite.textWidth;
+                state.app.stage.addChild(sprite);
+            }
         }
         state.app.stage.sortChildren();
         state.app.render();
