@@ -3,6 +3,7 @@ import AudioSource from "./classes/AudioSource";
 import Player from "./classes/Player";
 
 const state: {
+    achievements: number[];
     app: Application | null;
     cutscene: string | null;
     fontLoaded: boolean;
@@ -19,6 +20,7 @@ const state: {
     runEndedAt: number | null;
     tickedAt: number;
 } = {
+    achievements: [],
     app: null,
     cutscene: "intro",
     fontLoaded: false,

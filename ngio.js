@@ -1,0 +1,1 @@
+window.ngio = new window.Newgrounds.io.core(window.process.env.APP_ID, window.process.env.ENCRYPTION_KEY);

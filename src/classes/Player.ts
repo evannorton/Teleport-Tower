@@ -24,6 +24,7 @@ import projectileChargeLength from "../constants/projectileChargeLength";
 import screenWidth from "../constants/screenWidth";
 import sfxVolume from "../elements/sfxVolume";
 import state from "../state";
+import unlockMedal from "../functions/unlockMedal";
 import walkSpeed from "../constants/walkSpeed";
 
 class Player extends Definable implements Renderable, Updatable {
@@ -406,6 +407,7 @@ class Player extends Definable implements Renderable, Updatable {
             this.y = 15 * 16;
             this.end = true;
             state.cutscene = "outro";
+            unlockMedal(66051);
             const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
             if (typeof audio !== "undefined") {
                 const credits: Definable | undefined = audio.get("sfx/credits");
