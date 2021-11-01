@@ -1,4 +1,5 @@
 import AudioSource from "../classes/AudioSource";
+import Background from "../classes/Background";
 import Cutscene from "../classes/Cutscene";
 import Definable from "../classes/Definable";
 import Music from "../classes/Music";
@@ -10,6 +11,7 @@ import state from "../state";
 const update = (): void => {
     if (document.body.classList.contains("loading") === false) {
         const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
+        const backgrounds: Map<string, Definable> | undefined = definables.get("Background");
         const cutscenes: Map<string, Definable> | undefined = definables.get("Cutscene");
         const music: Map<string, Definable> | undefined = definables.get("Music");
         const players: Map<string, Definable> | undefined = definables.get("Player");
@@ -33,6 +35,13 @@ const update = (): void => {
                 projectiles.forEach((projectile: Definable): void => {
                     if (projectile instanceof Projectile) {
                         projectile.update();
+                    }
+                });
+            }
+            if (typeof backgrounds !== "undefined") {
+                backgrounds.forEach((background: Definable): void => {
+                    if (background instanceof Background) {
+                        background.update();
                     }
                 });
             }

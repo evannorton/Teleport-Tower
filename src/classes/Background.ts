@@ -5,6 +5,7 @@ import drawImage from "../functions/draw/drawImage";
 import screenHeight from "../constants/screenHeight";
 import screenWidth from "../constants/screenWidth";
 import state from "../state";
+import unlockMedal from "../functions/unlockMedal";
 
 class Background extends Definable implements Renderable {
     private readonly images: ImageSource[] = [];
@@ -23,6 +24,15 @@ class Background extends Definable implements Renderable {
             const percent: number = y / this.maxY;
             const index: number = Math.max(Math.min(Math.floor(this.images.length * percent), this.images.length - 1), 0);
             drawImage([...this.images].reverse()[index], 0, 0, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, 2);
+        }
+    }
+
+    public update(): void {
+        if (state.player !== null && state.player.isOnMap(this.slug)) {
+            const y: number = state.player.getY();
+            if (this.slug === "part2" && y <= 85 * 16) {
+                unlockMedal(66053);
+            }
         }
     }
 }
