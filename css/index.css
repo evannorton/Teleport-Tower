@@ -37,6 +37,10 @@ body {
     position: relative;
 }
 
+body.loading .link {
+    display: none;
+}
+
 .link {
     cursor: url(../images/cursor-pointer.png) 7 2, pointer;
     position: absolute;
