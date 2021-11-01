@@ -580,6 +580,9 @@ class Player extends Definable implements Renderable, Updatable {
                 this.projectile.remove();
                 this.projectile = null;
             }
+            if (transport.getSlug() === "big-fall") {
+                unlockMedal(66054);
+            }
         }
     }
 }
