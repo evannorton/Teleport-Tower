@@ -408,6 +408,10 @@ class Player extends Definable implements Renderable, Updatable {
             this.end = true;
             state.cutscene = "outro";
             unlockMedal(66051);
+            const time: number = Math.floor((state.runEndedAt === null ? state.now : state.runEndedAt) - state.resetAt);
+            if (time / 1000 / 60 <= 2) {
+                unlockMedal(66055);
+            }
             const audio: Map<string, Definable> | undefined = definables.get("AudioSource");
             if (typeof audio !== "undefined") {
                 const credits: Definable | undefined = audio.get("sfx/credits");
