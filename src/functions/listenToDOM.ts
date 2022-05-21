@@ -17,10 +17,6 @@ import togglePause from "./togglePause";
 import unpause from "../elements/unpause";
 
 const listenToDOM = (): void => {
-    addEventListener("beforeunload", (e: Event): void => {
-        e.preventDefault();
-        e.returnValue = false;
-    });
     addEventListener("resize", (): void => {
         sizeScreen();
     });
